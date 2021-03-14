@@ -1,0 +1,17 @@
+.movies-container {
+  display: flex;
+  flex-flow: column wrap;
+  margin-top: 10px;
+}
+
+.movies-container .movie, .movies-container .movieResults {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+}
+
+.movie .header, .movieResults .title, .movieResults .genre, .movieResults .votes, .movieResults .year, .movieResults .rating {
+  flex: 1 0 25%;
+}
