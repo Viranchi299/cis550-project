@@ -9,26 +9,22 @@ var connection = mysql.createPool(config);
 /* -------------------------------------------------- */
 
 
-/* ---- Q1a (Dashboard) ---- */
-function getAllGenres(req, res) {
+/* ---- (1A) Average Monthly Rent by City) ---- */
+function getAvgHomeValueAndRentByState(req, res) {
   var query = `
-    SELECT DISTINCT genre FROM Genres
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-}
+    WITH temp(State, AvgMonthlyRent)
+    AS ( SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+    FROM RentalPriceByLocation
+    WHERE State IN ?
+    GROUP BY State
+    ORDER BY AvgMonthlyRent DESC )
 
-//------------------------------need to update this method-----------------------;
-/* ---- Q1b (Dashboard) ---- */
-function getTopInGenre(req, res) {
-  console.log("Inside getTopInGenre function")
-  var genrePicked = req.params.genre
-  var query = `
-    SELECT title,rating,vote_count FROM Movies m JOIN Genres g ON m.id=g.movie_id WHERE g.genre='${genrePicked}' ORDER BY rating DESC, vote_count DESC  LIMIT 10
+    SELECT h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
+    FROM HomePriceByLocation h
+    WHERE State IN ?
+    LEFT JOIN temp ON h.State = temp.State
+    GROUP BY State
+    ORDER BY State ASC
   `;
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -37,6 +33,33 @@ function getTopInGenre(req, res) {
     }
   });
 };
+
+
+/* ---- (1B) Average Monthly Rent by City) ---- */
+function getAvgHomeValueAndRentByCity(req, res) {
+  var query = `
+    WITH temp(City, State, AvgMonthlyRent)
+    AS ( SELECT City, State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+    FROM RentalPriceByLocation
+    WHERE CITY IN ?
+    GROUP BY City
+    ORDER BY AvgMonthlyRent DESC )
+
+    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue',        temp.AvgMonthlyRent
+    FROM HomePriceByLocation h
+    WHERE CITY IN ?
+    LEFT JOIN temp ON h.City = temp.City
+    GROUP BY City
+    ORDER BY City ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
+
 
 /* ---- Q2 (Recommendations) ---- */
 function getRecs(req, res) {
