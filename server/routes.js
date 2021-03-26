@@ -9,22 +9,17 @@ var connection = mysql.createPool(config);
 /* -------------------------------------------------- */
 
 
-/* ---- (1A) Average Monthly Rent by City) ---- */
-function getAvgHomeValueAndRentByState(req, res) {
-  // var inputState = req.params.state // get multiple options from user?
+/* ---- (Get State) ---- */
+function getState(req, res) {
   var query = `
-    WITH temp(State, AvgMonthlyRent)
-    AS ( SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+    SELECT State 
+    FROM (
+    SELECT DISTINCT(State)
     FROM RentalPriceByLocation
-    WHERE State IN 
-    GROUP BY State
-    ORDER BY AvgMonthlyRent DESC )
-
-    SELECT h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
-    FROM HomePriceByLocation h
-    WHERE State IN ?
-    LEFT JOIN temp ON h.State = temp.State
-    GROUP BY State
+    UNION
+    SELECT DISTINCT(State)
+    FROM HomePriceByLocation
+    ) t
     ORDER BY State ASC
   `;
   connection.query(query, function(err, rows, fields) {
@@ -33,11 +28,88 @@ function getAvgHomeValueAndRentByState(req, res) {
       res.json(rows);
     }
   });
+}
+
+// Filters cities based on state input
+/* ---- (Get City) ---- */
+function getCity(req, res) {
+  var inputState = req.params.state // how to get multiple options?
+  var query = `
+    SELECT City 
+    FROM (
+    SELECT DISTINCT(City)
+    FROM RentalPriceByLocation
+    WHERE State = '${inputState}'
+    UNION
+    SELECT DISTINCT(City)
+    FROM HomePriceByLocation
+    WHERE State = '${inputeState}'
+    ) t
+    ORDER BY City ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (1A) Average Home Price vs Monthly) ---- */
+function getAvgHomeValueAndRent(req, res) {
+  var inputState = req.params.state
+  var inputCity = req.params.city
+  var query_state_only = `
+    WITH temp(State, AvgMonthlyRent)
+    AS ( SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+    FROM RentalPriceByLocation
+    WHERE State IN ? 
+    GROUP BY State
+    ORDER BY AvgMonthlyRent DESC )
+
+    SELECT h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
+    FROM HomePriceByLocation h
+    WHERE h.State IN ?
+    LEFT JOIN temp ON h.State = temp.State
+    GROUP BY State
+    ORDER BY State ASC
+  `;
+  var query_state_and_city = `
+    WITH temp(City, State, AvgMonthlyRent)
+    AS ( SELECT City, State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+    FROM RentalPriceByLocation
+    WHERE CITY IN ? 
+    GROUP BY City
+    ORDER BY AvgMonthlyRent DESC )
+
+    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
+    FROM HomePriceByLocation h
+    WHERE CITY IN ?
+    LEFT JOIN temp ON h.City = temp.City
+    GROUP BY City
+    ORDER BY City ASC
+  `;
+
+  if (re.params.city == null) {
+    connection.query(query_state_only, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+    });
+  } else {
+    connection.query(query_state_and_city, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+  }
 };
 
 
 /* ---- (1B) Average Monthly Rent by City) ---- */
-function getAvgHomeValueAndRentByCity(req, res) {
+function getAvgHomeValueAndRent(req, res) {
   var inputCity = req.params.city // how can we get multiple options from user?
   var query = `
     WITH temp(City, State, AvgMonthlyRent)
@@ -170,10 +242,10 @@ function randomMoviePosters(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-	getAllGenres: getAllGenres,
-	getTopInGenre: getTopInGenre,
-	getRecs: getRecs,
-	getDecades: getDecades,
-  bestGenresPerDecade: bestGenresPerDecade,
-  randomMoviePosters: randomMoviePosters
+	getState: getState,
+	getCity: getCity,
+	getAvgHomeValueAndRent: getAvgHomeValueAndRent,
+	// getDecades: getDecades,
+ //  bestGenresPerDecade: bestGenresPerDecade,
+ //  randomMoviePosters: randomMoviePosters
 }

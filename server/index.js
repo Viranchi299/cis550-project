@@ -14,23 +14,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 /* ---------------------------------------------------------------- */
 
 
-
-
-/* ---- (Dashboard) ---- */
-// The route localhost:8081/genres is registered to the function
-// routes.getAllGenres, specified in routes.js.
-app.get('/genres', routes.getAllGenres);
-
-
-
-
+/* ---- (Home vs Rent Info) ---- */
+app.get('/homevsrent/state', routes.getState);
+app.get('/homevsrent/city', routes.getCity);
+app.get('/homevsrent/:state&:city', routes.getAvgHomeValueAndRent);
 
 
 /* ---- Q1b (Dashboard) ---- */
-app.get('/genres/:genre', routes.getTopInGenre); // Hint: Replace () => {} with the appropriate route handler.
-
-
-
+app.get('/salary/:genre', routes.getTopInGenre); // Hint: Replace () => {} with the appropriate route handler.
 
 
 
