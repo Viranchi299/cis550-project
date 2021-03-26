@@ -11,11 +11,12 @@ var connection = mysql.createPool(config);
 
 /* ---- (1A) Average Monthly Rent by City) ---- */
 function getAvgHomeValueAndRentByState(req, res) {
+  // var inputState = req.params.state // get multiple options from user?
   var query = `
     WITH temp(State, AvgMonthlyRent)
     AS ( SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
     FROM RentalPriceByLocation
-    WHERE State IN ?
+    WHERE State IN 
     GROUP BY State
     ORDER BY AvgMonthlyRent DESC )
 
@@ -37,15 +38,16 @@ function getAvgHomeValueAndRentByState(req, res) {
 
 /* ---- (1B) Average Monthly Rent by City) ---- */
 function getAvgHomeValueAndRentByCity(req, res) {
+  var inputCity = req.params.city // how can we get multiple options from user?
   var query = `
     WITH temp(City, State, AvgMonthlyRent)
     AS ( SELECT City, State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
     FROM RentalPriceByLocation
-    WHERE CITY IN ?
+    WHERE CITY IN ? 
     GROUP BY City
     ORDER BY AvgMonthlyRent DESC )
 
-    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue',        temp.AvgMonthlyRent
+    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
     FROM HomePriceByLocation h
     WHERE CITY IN ?
     LEFT JOIN temp ON h.City = temp.City
@@ -61,24 +63,29 @@ function getAvgHomeValueAndRentByCity(req, res) {
 };
 
 
-/* ---- Q2 (Recommendations) ---- */
-function getRecs(req, res) {
-    console.log("Inside get Recs function")
-    var moviePicked = req.params.movie
-    console.log("Movie picked inside function is " + moviePicked)
+/* ---- Average Salary for LCA and Green Card By State ---- */
+function getAvgSalaryLCAAndGCByState(req, res) {
+    var inputState = req.params.state // how can we get multiple options from user?
+    console.log("State picked inside function is " + inputState)
     var query = `
-    with l1 as (
-    with list1 as (SELECT genre from Genres g JOIN Movies m ON g.movie_id = m.id WHERE m.title = '${moviePicked}'),
-    list1a as (SELECT count(*)as counttt ,0 as mergerr FROM list1),
-    list2 as (SELECT movie_id,genre from Genres),
-    list3 as (SELECT DISTINCT list2.movie_id,list2.genre FROM list1 JOIN list2 ON list1.genre=list2.genre),
-    list4 as (SELECT movie_id, count(movie_id) as count ,0 as merger FROM list3 GROUP BY movie_id),
-    list5 as (SELECT * FROM list4 JOIN list1a ON list4.merger=list1a.mergerr)
-    SELECT * FROM list5 WHERE count>=counttt
-    )
-    SELECT title,id,rating,vote_count from l1 JOIN movies m ON l1.movie_id=m.id WHERE NOT(title='${moviePicked}')
-    ORDER BY m.rating DESC, m.vote_count DESC
-    LIMIT 5;
+    WITH lca(State, AvgSalaryLCA, NumDataPointsLCA) 
+    AS ( SELECT State, AVG(Salary) AS 'AvgSalaryLCA', COUNT(Salary) AS 'NumDataPointsLCA'
+    FROM VisaApplication v
+    WHERE PayUnit = 'Year' 
+    AND State IN ?
+    GROUP BY State ) , 
+
+    gc(State, AvgSalaryGC, NumDataPointsGC)
+    AS ( SELECT State, AVG(Salary) AS 'AvgSalaryGC', COUNT(Salary) AS 'NumDataPointsGC'
+    FROM GreenCardApplication
+    WHERE PayUnit = 'Year'
+    AND State IN ?
+    GROUP BY State )
+
+    SELECT lca.State, lca.AvgSalaryLCA, lca.NumDataPointsLCA, gc.AvgSalaryGC, gc.NumDataPointsGC
+    FROM lca
+    LEFT JOIN gc ON lca.State = gc.State
+    ORDER BY AvgSalaryLCA DESC, AvgSalaryGC DESC
     `;
     connection.query(query, function(err, rows, fields) {
       if (err) console.log(err);
