@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const RecommendationsRow = () => {
+const RecommendationsRow = (props) => {
 
 	return (
 		<div className="movieResults">
