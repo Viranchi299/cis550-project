@@ -14,47 +14,26 @@ app.use(bodyParser.urlencoded({extended: false}));
 /* ---------------------------------------------------------------- */
 
 
-/* ---- (Home vs Rent Info) ---- */
-app.get('/homevsrent/state', routes.getState);
-app.get('/homevsrent/city', routes.getCity);
-app.get('/homevsrent/:state&:city', routes.getAvgHomeValueAndRent);
+/* ---- (Housing and Rent Analysis) ---- */
+app.get('/homerent/homevaluestate', routes.getHomeValueByState);
+app.get('/homerent/rentpricestate', routes.getRentByState);
 
+app.get('/homerent/getstateshousing', routes.getStatesHousing);
+app.get('/homerent/getcitieshousing', routes.getCitiesHousing);
+app.get('/homerent/:getstateshousing&:getcitieshousing', routes.getHomeValueByCity);
 
-/* ---- Q1b (Dashboard) ---- */
-app.get('/salary/:genre', routes.getTopInGenre); // Hint: Replace () => {} with the appropriate route handler.
+app.get('/homerent/getstatesrent', routes.getStatesRent);
+app.get('/homerent/getcitiesrent', routes.getCitiesRent);
+app.get('/homerent/:getstatesrent&:getcitiesrent', routes.getRentByCity);
 
+/* ---- (Salary Analysis) ---- */
+app.get('/salary/salarystate', routes.getSalaryByState);
+app.get('/salary/getstatessalary', routes.getStatesSalary);
+app.get('/salary/:getstatessalary&:salary_low&:salary_high', routes.getEmployersBySalaryRange);
 
-
-
-
-/* ---- Q2 (Recommendations) ---- */
-app.get('/recommendations/:movie', routes.getRecs);
-
-
-
-
-
-/* ---- (Best Genre) ---- */
-app.get('/decades', routes.getDecades);
-
-
-
-
-
-
-/* ---- Q3b (Best Genre) ---- */
-app.get('/decades/:decade', routes.bestGenresPerDecade);
-
-
-
-/* ---- EXTRA CREDIT ---- */
-app.get('/Posters/random', routes.randomMoviePosters);
-
-
-
-
-
-
+/* ---- (Housing and Rent Based on Salary Analysis) ---- */
+app.get('/homerentsalary/rentsalary', routes.getRentVsSalaryByState);
+app.get('/homerentsalary/homesalary', routes.getHomeVsSalaryByState);
 
 
 app.listen(8081, () => {
