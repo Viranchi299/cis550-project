@@ -205,6 +205,8 @@ function getStatesSalary(req, res) {
 /* ---- (Get Employers by Salary Range and State) ---- */
 function getEmployersBySalaryRange(req, res) {
 	var inputState = req.params.state
+  var inputSalaryLow = req.params.salary_low
+  var inputSalaryHigh = req.params.salary_high
   var query = `
     WITH temp(Employer, State, AvgSalary)
     AS ( 
@@ -220,8 +222,8 @@ function getEmployersBySalaryRange(req, res) {
           ORDER BY AvgSalary DESC
         )
     SELECT * FROM temp
-    WHERE State = 'CA'
-    AND AvgSalary BETWEEN '80000' AND '150000'
+    WHERE State = ${inputState}
+    AND AvgSalary BETWEEN ${inputSalaryLow} AND ${inputSalaryHigh}
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
   `;
@@ -236,7 +238,7 @@ function getEmployersBySalaryRange(req, res) {
 // The exported functions, which can be accessed in index.js.
 module.exports = {
 	getHomeValueByState: getHomeValueByState,
-	getRentByState: getRentByState,
+  getRentByState: getRentByState,
 	getStatesHousing: getStatesHousing,
   getCitiesHousing: getCitiesHousing,
   getStatesRent: getStatesRent,
