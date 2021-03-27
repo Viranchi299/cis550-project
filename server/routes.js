@@ -271,7 +271,7 @@ function getRentVsSalaryByState(req, res) {
   });
 }
 
-/* ---- (Get Rent vs Salary) ---- */
+/* ---- (Get Home Price vs Salary) ---- */
 function getHomeVsSalaryByState(req, res) {
   inputState = req.params.state
   var query = `
