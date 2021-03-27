@@ -7,48 +7,40 @@ import {
 import Dashboard from './Dashboard';
 import Recommendations from './Recommendations';
 import BestGenres from './BestGenres';
-import Posters from './Posters'
+// added import for EC portion 
+import Posters from './Posters';
 
 const App = () => {
-
-		return (
-			<div className="App">
-				<Router>
-					<Switch>
-						<Route
-							exact
-							path="/"
-							component={
-								<Dashboard />
-							}
-						/>
-						<Route
-							exact
-							path="/dashboard"
-							component={
-								<Dashboard />
-							}
-						/>
-						<Route
-							path="/recommendations"
-							component={
-								<Recommendations />
-							}
-						/>
-						<Route
-							path="/bestgenres"
-							component={
-								<BestGenres />
-							}
-						/>
-						<Route
-							path="/Posters"
-							component={
-								<Posters />
-							}
-						/>
-					</Switch>
-				</Router>
-			</div>
-		);
-	}
+	return (
+		<div className="App">
+			<Router>
+				<Switch>
+					<Route
+						exact
+						path="/"
+						component={Dashboard}
+					/>
+					<Route
+						exact
+						path="/dashboard"
+						component={Dashboard}
+					/>
+					<Route
+						path="/recommendations"
+						component={Recommendations}
+					/>
+					<Route
+						path="/bestgenres"
+						component={BestGenres}
+					/>
+					{/* new route for posters page */}
+					<Route
+						path="/posters"
+						component={Posters}
+					/>
+				</Switch>
+			</Router>
+		</div>
+	);
+}
+export default App;

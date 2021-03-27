@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const DashboardMovieRow = (props) = () => {
+const DashboardMovieRow = (props) => {
 
 	/* ---- Q1b (Dashboard) ---- */
 	/* Change the contents (NOT THE STRUCTURE) of the HTML elements to show a movie row. */
