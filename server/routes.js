@@ -235,6 +235,79 @@ function getEmployersBySalaryRange(req, res) {
   });
 }
 
+/* ---- (Get Rent vs Salary) ---- */
+function getRentVsSalaryByState(req, res) {
+  inputState = req.params.state
+  var query = `
+    WITH s(State, AvgMonthlySalary)
+    AS (
+        SELECT State, ROUND(AVG(Salary / 12),2) AS 'AvgMonthlySalary'
+        FROM (
+              SELECT State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+              UNION ALL
+              SELECT State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+              ) x
+        GROUP BY State
+        ORDER BY State ASC ),
+    r(State, AvgMonthlyRent)
+    AS (
+        SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
+        FROM RentalPriceByLocation
+        GROUP BY State
+        ORDER BY State ASC
+        )   
+    SELECT s.State, 
+           s.AvgMonthlySalary, 
+           r.AvgMonthlyRent, 
+           (r.AvgMonthlyRent / s.AvgMonthlySalary * 100) AS '%RentOfMonthlySalary'
+    FROM s
+    LEFT JOIN r ON s.State = r.State
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (Get Rent vs Salary) ---- */
+function getHomeVsSalaryByState(req, res) {
+  inputState = req.params.state
+  var query = `
+    WITH s(State, AvgAnnualSalary)
+    AS (
+        SELECT State, ROUND(AVG(Salary),2) AS 'AvgAnnualSalary'
+        FROM (
+              SELECT State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+              UNION ALL
+              SELECT State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+              ) x
+        GROUP BY State
+        ORDER BY State ASC ),
+    h(State, AvgHomePrice)
+    AS (
+        SELECT State, ROUND(AVG(HomePriceValue),2) AS 'AvgHomePrice'
+        FROM HomePriceByLocation
+        GROUP BY State
+        ORDER BY State ASC
+        )   
+    SELECT s.State, 
+           s.AvgAnnualSalary, 
+           h.AvgHomePrice, 
+           (h.AvgHomePrice / s.AvgAnnualSalary) AS 'YearsToBuyHome'
+    FROM s
+    LEFT JOIN h ON s.State = h.State
+    ORDER BY YearsToBuyHome DESC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
 	getHomeValueByState: getHomeValueByState,
@@ -247,7 +320,9 @@ module.exports = {
   getRentByCity: getRentByCity,
   getSalaryByState: getSalaryByState,
   getStatesSalary: getStatesSalary,
-  getEmployersBySalaryRange: getEmployersBySalaryRange
+  getEmployersBySalaryRange: getEmployersBySalaryRange,
+  getRentVsSalaryByState: getRentVsSalaryByState,
+  getHomeVsSalaryByState: getHomeVsSalaryByState
 	// getDecades: getDecades,
  //  bestGenresPerDecade: bestGenresPerDecade,
  //  randomMoviePosters: randomMoviePosters
