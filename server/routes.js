@@ -8,18 +8,34 @@ var connection = mysql.createPool(config);
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
 
-
-/* ---- (Get State) ---- */
-function getState(req, res) {
+// Housing & Rent Analysis: State-Level breakdown
+/* ---- (Get Home Value By State) ---- */
+function getHomeValueByState(req, res) {
   var query = `
-    SELECT State 
-    FROM (
-    SELECT DISTINCT(State)
-    FROM RentalPriceByLocation
-    UNION
-    SELECT DISTINCT(State)
+    SELECT State, 
+           ROUND(MIN(HomePriceValue),2) AS 'MinHVP',
+           ROUND(MAX(HomePriceValue),2) AS 'MaxHVP',
+           ROUND(AVG(HomePriceValue),2) AS 'AvgHVP'
     FROM HomePriceByLocation
-    ) t
+    GROUP BY State
+    ORDER BY State ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+/* ---- (Get Monthly Rent By State) ---- */
+function getRentByState(req, res) {
+  var query = `
+    SELECT State, 
+           ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
+           ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
+           ROUND(AVG(RentalPriceValue),2) AS 'AvgRent'
+    FROM RentalPriceByLocation
+    GROUP BY State
     ORDER BY State ASC
   `;
   connection.query(query, function(err, rows, fields) {
@@ -30,21 +46,30 @@ function getState(req, res) {
   });
 }
 
-// Filters cities based on state input
-/* ---- (Get City) ---- */
-function getCity(req, res) {
-  var inputState = req.params.state // how to get multiple options?
+// Housing & Rent Analysis: City-Level breakdown
+
+/* ---- (Get States from Housing set - dropdown) ---- */
+function getStatesHousing(req, res) {
   var query = `
-    SELECT City 
-    FROM (
-    SELECT DISTINCT(City)
-    FROM RentalPriceByLocation
-    WHERE State = '${inputState}'
-    UNION
-    SELECT DISTINCT(City)
+    SELECT DISTINCT State
     FROM HomePriceByLocation
-    WHERE State = '${inputeState}'
-    ) t
+    ORDER BY State ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (Get Cities from Housing set - dropdown) ---- */
+function getCitiesHousing(req, res) {
+  var inputState = req.params.state
+  var query = `
+    SELECT DISTINCT City
+    FROM HomePriceByLocation
+    WHERE State = ${inputState}
     ORDER BY City ASC
   `;
   connection.query(query, function(err, rows, fields) {
@@ -55,128 +80,119 @@ function getCity(req, res) {
   });
 }
 
-/* ---- (1A) Average Home Price vs Monthly) ---- */
-function getAvgHomeValueAndRent(req, res) {
+/* ---- (Get Home Value By City) ---- */
+function getHomeValueByCity(req, res) {
   var inputState = req.params.state
   var inputCity = req.params.city
-  var query_state_only = `
-    WITH temp(State, AvgMonthlyRent)
-    AS ( SELECT State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
-    FROM RentalPriceByLocation
-    WHERE State IN ? 
-    GROUP BY State
-    ORDER BY AvgMonthlyRent DESC )
+  var query = `
+    SELECT City, 
+           State, 
+           ROUND(MIN(HomePriceValue),2) AS 'MinHVP',
+           ROUND(MAX(HomePriceValue),2) AS 'MaxHVP',
+           ROUND(AVG(HomePriceValue),2) AS 'AvgHVP'
+    FROM HomePriceByLocation
+    WHERE State = ${inputState}
+    AND City = ${inputCity}
+  `;
+  
+  connection.query(query_state_only, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
 
-    SELECT h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
-    FROM HomePriceByLocation h
-    WHERE h.State IN ?
-    LEFT JOIN temp ON h.State = temp.State
+/* ---- (Get States from Rent set - dropdown) ---- */
+function getStatesRent(req, res) {
+  var query = `
+    SELECT DISTINCT State
+    FROM RentalPriceByLocation
+    ORDER BY State ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (Get Cities from Rent set - dropdown) ---- */
+function getCitiesRent(req, res) {
+  var inputState = req.params.state
+  var query = `
+    SELECT DISTINCT City
+    FROM RentalPriceByLocation
+    WHERE State = ${inputState}
+    ORDER BY City ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (Get Rent By City) ---- */
+function getRentByCity(req, res) {
+  var inputState = req.params.state
+  var inputCity = req.params.city
+  var query = `
+    SELECT City, 
+           State, 
+           ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
+           ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
+           ROUND(AVG(RentalPriceValue),2) AS 'AvgRent'
+    FROM RentalPriceByLocation
+    WHERE State = ${inputState}
+    AND City = ${inputCity}
+  `;
+  
+  connection.query(query_state_only, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
+
+// Salary Analysis: State-Level breakdown
+// Combines both LCA and Green Card data
+/* ---- (Get Salary By State) ---- */
+function getSalaryByState(req, res) {
+  var query = `
+    SELECT State, 
+           ROUND(MIN(Salary),2) AS 'MinSalary',
+           ROUND(MAX(Salary),2) AS 'MaxSalary',
+           ROUND(AVG(Salary),2) AS 'AvgSalary'
+    FROM (   
+          SELECT State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+          UNION ALL
+          SELECT State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+          ) temp
     GROUP BY State
     ORDER BY State ASC
   `;
-  var query_state_and_city = `
-    WITH temp(City, State, AvgMonthlyRent)
-    AS ( SELECT City, State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
-    FROM RentalPriceByLocation
-    WHERE CITY IN ? 
-    GROUP BY City
-    ORDER BY AvgMonthlyRent DESC )
-
-    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
-    FROM HomePriceByLocation h
-    WHERE CITY IN ?
-    LEFT JOIN temp ON h.City = temp.City
-    GROUP BY City
-    ORDER BY City ASC
-  `;
-
-  if (re.params.city == null) {
-    connection.query(query_state_only, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-    });
-  } else {
-    connection.query(query_state_and_city, function(err, rows, fields) {
+  
+  connection.query(query_state_only, function(err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  }
 };
 
-
-/* ---- (1B) Average Monthly Rent by City) ---- */
-function getAvgHomeValueAndRent(req, res) {
-  var inputCity = req.params.city // how can we get multiple options from user?
+/* ---- (Get States from Salary sets - dropdown) ---- */
+function getStatesSalary(req, res) {
   var query = `
-    WITH temp(City, State, AvgMonthlyRent)
-    AS ( SELECT City, State, ROUND(AVG(RentalPriceValue),2) AS 'AvgMonthlyRent'
-    FROM RentalPriceByLocation
-    WHERE CITY IN ? 
-    GROUP BY City
-    ORDER BY AvgMonthlyRent DESC )
-
-    SELECT h.City, h.State, ROUND(AVG(h.HomePriceValue),2) AS 'AvgHomeValue', temp.AvgMonthlyRent
-    FROM HomePriceByLocation h
-    WHERE CITY IN ?
-    LEFT JOIN temp ON h.City = temp.City
-    GROUP BY City
-    ORDER BY City ASC
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
-
-
-/* ---- Average Salary for LCA and Green Card By State ---- */
-function getAvgSalaryLCAAndGCByState(req, res) {
-    var inputState = req.params.state // how can we get multiple options from user?
-    console.log("State picked inside function is " + inputState)
-    var query = `
-    WITH lca(State, AvgSalaryLCA, NumDataPointsLCA) 
-    AS ( SELECT State, AVG(Salary) AS 'AvgSalaryLCA', COUNT(Salary) AS 'NumDataPointsLCA'
-    FROM VisaApplication v
-    WHERE PayUnit = 'Year' 
-    AND State IN ?
-    GROUP BY State ) , 
-
-    gc(State, AvgSalaryGC, NumDataPointsGC)
-    AS ( SELECT State, AVG(Salary) AS 'AvgSalaryGC', COUNT(Salary) AS 'NumDataPointsGC'
-    FROM GreenCardApplication
-    WHERE PayUnit = 'Year'
-    AND State IN ?
-    GROUP BY State )
-
-    SELECT lca.State, lca.AvgSalaryLCA, lca.NumDataPointsLCA, gc.AvgSalaryGC, gc.NumDataPointsGC
-    FROM lca
-    LEFT JOIN gc ON lca.State = gc.State
-    ORDER BY AvgSalaryLCA DESC, AvgSalaryGC DESC
-    `;
-    connection.query(query, function(err, rows, fields) {
-      if (err) console.log(err);
-      else {
-        res.json(rows);
-      }
-    });
-};
-
-/* ---- (Best Genres) ---- */
-function getDecades(req, res) {
-  console.log("Inside get decades function")
-	var query = `
-    SELECT DISTINCT (FLOOR(year/10)*10) AS decade
-    FROM (
-      SELECT DISTINCT release_year as year
-      FROM Movies
-      ORDER BY release_year
-    ) y
+    WITH temp(State)
+    AS ( SELECT DISTINCT State FROM GreenCardApplication
+         UNION
+         SELECT DISTINCT State FROM VisaApplication )
+         SELECT State FROM temp 
+         ORDER BY State ASC
   `;
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -186,51 +202,28 @@ function getDecades(req, res) {
   });
 }
 
-
-
-/* ---- Q3 (Best Genres) ---- */
-function bestGenresPerDecade(req, res) {
-  console.log("Inside best genres per decade function")
-  var decadePicked = req.params.decade
-  console.log("The decade we're in is " + decadePicked)
-	var query = `
-  with ta as(
-  with t1 as
-  (SELECT DISTINCT genre,title,id,imdb_id,rating,release_year,vote_count FROM Movies m JOIN Genres g ON m.id=g.movie_id WHERE FLOOR(release_year/10)*10='${decadePicked}')
-  SELECT genre,AVG(rating) as avg_rating FROM t1 GROUP BY genre
-  ),
-  tb as (SELECT distinct genre, 0 AS avg_rating FROM Genres)
-  SELECT tb.genre,IFNULL(ta.avg_rating,0) as avg_rating FROM tb LEFT JOIN ta ON ta.genre = tb.genre
-  ORDER BY avg_rating DESC,genre ASC;
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-}
-
-
-/* Q3 BACKUP CODE: PASSES AUTOGRADER BUT DOESN'T LIST EVERY GENRE EVER AS 0 FOR CERTAIN decades
-
-var query = `
-with t1 as
-(SELECT DISTINCT genre,title,id,imdb_id,rating,release_year,vote_count FROM Movies m JOIN Genres g ON m.id=g.movie_id WHERE FLOOR(release_year/10)*10='${decadePicked}')
-SELECT genre,AVG(rating) as avg_rating FROM t1 GROUP BY genre
-ORDER BY avg_rating DESC,genre ASC
-`;
-
-*/
-
-
-
-//SELECT DISTINCT imdb_id FROM Movies order by newid() LIMIT 15
-
-function randomMoviePosters(req, res) {
-  console.log("Inside randomMoviePosters function")
-	var query = `
-  SELECT DISTINCT imdb_id FROM Movies ORDER BY RAND() LIMIT 15
+/* ---- (Get Employers by Salary Range and State) ---- */
+function getEmployersBySalaryRange(req, res) {
+	var inputState = req.params.state
+  var query = `
+    WITH temp(Employer, State, AvgSalary)
+    AS ( 
+          SELECT EmployerName, 
+          State,
+          ROUND(AVG(Salary),2) AS 'AvgSalary'
+          FROM ( 
+                SELECT EmployerName, State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+                UNION ALL
+                SELECT EmployerName, State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+              ) x
+          GROUP BY EmployerName
+          ORDER BY AvgSalary DESC
+        )
+    SELECT * FROM temp
+    WHERE State = 'CA'
+    AND AvgSalary BETWEEN '80000' AND '150000'
+    GROUP BY Employer
+    ORDER BY AvgSalary DESC, State ASC
   `;
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -242,9 +235,17 @@ function randomMoviePosters(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-	getState: getState,
-	getCity: getCity,
-	getAvgHomeValueAndRent: getAvgHomeValueAndRent,
+	getHomeValueByState: getHomeValueByState,
+	getRentByState: getRentByState,
+	getStatesHousing: getStatesHousing,
+  getCitiesHousing: getCitiesHousing,
+  getStatesRent: getStatesRent,
+  getCitiesRent: getCitiesRent,
+  getHomeValueByCity: getHomeValueByCity,
+  getRentByCity: getRentByCity,
+  getSalaryByState: getSalaryByState,
+  getStatesSalary: getStatesSalary,
+  getEmployersBySalaryRange: getEmployersBySalaryRange
 	// getDecades: getDecades,
  //  bestGenresPerDecade: bestGenresPerDecade,
  //  randomMoviePosters: randomMoviePosters
