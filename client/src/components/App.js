@@ -9,9 +9,8 @@ import Recommendations from './Recommendations';
 import BestGenres from './BestGenres';
 import Posters from './Posters'
 
-export default class App extends React.Component {
+const App = () => {
 
-	render() {
 		return (
 			<div className="App">
 				<Router>
@@ -19,38 +18,37 @@ export default class App extends React.Component {
 						<Route
 							exact
 							path="/"
-							render={() => (
+							component={
 								<Dashboard />
-							)}
+							}
 						/>
 						<Route
 							exact
 							path="/dashboard"
-							render={() => (
+							component={
 								<Dashboard />
-							)}
+							}
 						/>
 						<Route
 							path="/recommendations"
-							render={() => (
+							component={
 								<Recommendations />
-							)}
+							}
 						/>
 						<Route
 							path="/bestgenres"
-							render={() => (
+							component={
 								<BestGenres />
-							)}
+							}
 						/>
 						<Route
 							path="/Posters"
-							render={() => (
+							component={
 								<Posters />
-							)}
+							}
 						/>
 					</Switch>
 				</Router>
 			</div>
 		);
 	}
-}
