@@ -310,9 +310,9 @@ function getHomeVsSalaryByState(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-	getHomeValueByState: getHomeValueByState,
+  getHomeValueByState: getHomeValueByState,
   getRentByState: getRentByState,
-	getStatesHousing: getStatesHousing,
+  getStatesHousing: getStatesHousing,
   getCitiesHousing: getCitiesHousing,
   getStatesRent: getStatesRent,
   getCitiesRent: getCitiesRent,
@@ -323,7 +323,4 @@ module.exports = {
   getEmployersBySalaryRange: getEmployersBySalaryRange,
   getRentVsSalaryByState: getRentVsSalaryByState,
   getHomeVsSalaryByState: getHomeVsSalaryByState
-	// getDecades: getDecades,
- //  bestGenresPerDecade: bestGenresPerDecade,
- //  randomMoviePosters: randomMoviePosters
 }
