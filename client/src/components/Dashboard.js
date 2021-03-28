@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import GenreButton from './GenreButton';
 import DashboardMovieRow from './DashboardMovieRow';
 
 const Dashboard = (props) => {
-  const [stateDivs, setStateDivs] = useState(true);
+  const [stateDivs, setStateDivs] = useState([]);
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
 
-  useMountEffect(getStates);
+  useMountEffect(getAllStatesData);
 
-  function getStates() {
+  function getAllStatesData() {
     fetch("http://localhost:8081/homerent/homevaluestate",
       {
         method: 'GET' // The type of HTTP request.
@@ -22,14 +21,14 @@ const Dashboard = (props) => {
       }, err => {
         // Print the error if there is one.
         console.log(err);
-      }).then(stateList => {
+      }).then((stateList) => {
         console.log(stateList);
         if (!stateList) return;
         let states = stateList.map((state, i) =>
           <div><DashboardMovieRow state={state.State} minHVP={state.MinHVP} MaxHVP={state.MaxHVP} /> </div>
         );
         setStateDivs(states);
-      }, err => {
+      }, (err) => {
         // Print the error if there is one.
         console.log(err);
       });
@@ -58,7 +57,7 @@ const Dashboard = (props) => {
       <PageNavbar active="dashboard" />
         <br></br>
         <StateContainer/>
-      </div>
+    </div>
   );
 }
 
