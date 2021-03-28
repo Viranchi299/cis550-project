@@ -19,7 +19,7 @@ app.get('/homerent/homevaluestate', routes.getHomeValueByState);
 app.get('/homerent/rentpricestate', routes.getRentByState);
 
 app.get('/homerent/getstateshousing', routes.getStatesHousing);
-app.get('/homerent/getcitieshousing', routes.getCitiesHousing);
+app.get('/homerent/getcitieshousing/:state', routes.getCitiesHousing);
 app.get('/homerent/:getstateshousing&:getcitieshousing', routes.getHomeValueByCity);
 
 app.get('/homerent/getstatesrent', routes.getStatesRent);
