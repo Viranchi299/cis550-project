@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Recommendations from './Recommendations';
-import BestGenres from './BestGenres';
+import Analyze from './Analyze';
 // added import for EC portion 
 import Posters from './Posters';
 
@@ -30,8 +30,8 @@ const App = () => {
 						component={Recommendations}
 					/>
 					<Route
-						path="/bestgenres"
-						component={BestGenres}
+						path="/analyze"
+						component={Analyze}
 					/>
 					{/* new route for posters page */}
 					<Route
