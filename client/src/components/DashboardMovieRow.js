@@ -7,9 +7,9 @@ const DashboardMovieRow = (props) => {
 	/* Change the contents (NOT THE STRUCTURE) of the HTML elements to show a movie row. */
 		return (
 			<div className="movie">
-				<div className="title">{props.title}</div>
-				<div className="rating">{props.rating}</div>
-				<div className="votes">{props.vote_count}</div>
+				<div className="state">{props.state}</div>
+				<div className="minHVP">{props.minHVP}</div>
+				<div className="maxHVP">{props.MaxHVP}</div>
 			</div>
 		);
 }

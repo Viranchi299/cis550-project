@@ -11,6 +11,7 @@ var connection = mysql.createPool(config);
 // Housing & Rent Analysis: State-Level breakdown
 /* ---- (Get Home Value By State) ---- */
 function getHomeValueByState(req, res) {
+  console.log("calling getHomeValueByState...");
   var query = `
     SELECT State, 
            ROUND(MIN(HomePriceValue),2) AS 'MinHVP',
@@ -21,11 +22,16 @@ function getHomeValueByState(req, res) {
     ORDER BY State ASC
   `;
   connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
+    if (err) {
+      console.log("WENT WRONG!!!!!!!!!!!!!\n");
+      console.log(err);
+    }
     else {
+      // console.log(res.json(rows));
       res.json(rows);
     }
   });
+  console.log("completed getHomeValueByState");
 }
 /* ---- (Get Monthly Rent By State) ---- */
 function getRentByState(req, res) {
