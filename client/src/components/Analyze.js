@@ -33,7 +33,6 @@ const Analyze = (props) => {
 				method: 'GET' // The type of HTTP request.
 			}).then(res => {
 				// Convert the response data to a JSON.
-				console.log('something?');
 				return res.json();
 			}, err => {
 				// Print the error if there is one.
@@ -58,7 +57,6 @@ const Analyze = (props) => {
 				method: 'GET' // The type of HTTP request.
 			}).then(res => {
 				// Convert the response data to a JSON.
-				console.log('something?');
 				return res.json();
 			}, err => {
 				// Print the error if there is one.
@@ -69,7 +67,6 @@ const Analyze = (props) => {
 				let cityDivs = cityList.map((city, i) =>
 					<option value={city.City}>{city.City}</option>
 				);
-				console.log(cityDivs);
 				//Set the state of the genres list to the value returned by the HTTP response from the server.
 				setCitiesList(cityDivs);
 			}, (err) => {
@@ -78,26 +75,30 @@ const Analyze = (props) => {
 			});
 	}
 
-	function submitCityState() {
+	function loadHouses() {
 		fetch(`http://localhost:8081/homerent/${selectedState}&${selectedCity}`,
 			{
 				method: 'GET' // The type of HTTP request.
 			}).then(res => {
 				// Convert the response data to a JSON.
-				console.log('something?');
 				return res.json();
 			}, err => {
 				// Print the error if there is one.
 				console.log(err);
-			}).then((cityList) => {
-				console.log(cityList);
-				if (!cityList) return;
-				let cityDivs = cityList.map((city, i) =>
-					<option value={city.City}>{city.City}</option>
+			}).then((houses) => {
+				if (!houses) return;
+				let houseRows = houses.map((house, i) =>
+					<BestGenreRow 
+					City={house.City} 
+					State={house.State}
+					MinHVP={house.MinHVP}
+					MaxHVP={house.MaxHVP}
+					AvgHVP={house.AvgHVP} />
 				);
-				console.log(cityDivs);
+				console.log(houses);
 				//Set the state of the genres list to the value returned by the HTTP response from the server.
-				setCitiesList(cityDivs);
+				setHouses(houseRows);
+				console.log(houseRows);
 			}, (err) => {
 				// Print the error if there is one.
 				console.log(err);
@@ -127,7 +128,7 @@ const Analyze = (props) => {
 						<option select value> -- select a city -- </option>
 						{cityList}
 					</select>
-					<button className="submit-btn" id="decadesSubmitBtn" onClick={submitCityState}>Submit</button>
+					<button className="submit-btn" id="decadesSubmitBtn" onClick={loadHouses}>Submit</button>
 				</div>
 			</div>
 		);
@@ -137,8 +138,11 @@ const Analyze = (props) => {
 		return (
 			<div className="movies-container">
 				<div className="movie">
-					<div className="header"><strong>Genre</strong></div>
-					<div className="header"><strong>Average Rating</strong></div>
+					<div className="header"><strong>City</strong></div>
+					<div className="header"><strong>State</strong></div>
+					<div className="header"><strong>Min House Price</strong></div>
+					<div className="header"><strong>Max House Price</strong></div>
+					<div className="header"><strong>Average House Price</strong></div>
 				</div>
 				<div className="movies-container" id="results">
 					{houses}
