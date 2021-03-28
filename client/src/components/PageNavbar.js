@@ -7,7 +7,7 @@ const PageNavBar = (props) => {
 
 	useEffect(() => {
 	// list of pages for navbar, change when needed. 
-	const pageList = ['dashboard', 'recommendations', 'bestgenres','Posters'];
+	const pageList = ['dashboard', 'recommendations', 'analyze','Posters'];
 		let navbarDivs = pageList.map((page, i) => {
 			if (props.active === page) {
 				return <a className="nav-item nav-link active" key={i} href={"/" + page}>{page.charAt(0).toUpperCase() + page.substring(1, page.length)}</a>
