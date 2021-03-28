@@ -93,8 +93,9 @@ function getCitiesHousing(req, res) {
 /* ---- (Get Home Value By City) ---- */
 function getHomeValueByCity(req, res) {
   console.log("calling getHomeValueByCity...");
-  var inputState = req.params.state
-  var inputCity = req.params.city
+  var inputState = req.params.getstateshousing
+  var inputCity = req.params.getcitieshousing
+  console.log(`input state is: ${inputState} and city is:${inputCity}`);
   var query = `
     SELECT City, 
            State, 
