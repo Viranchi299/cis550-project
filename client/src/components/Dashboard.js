@@ -10,6 +10,8 @@ const Dashboard = (props) => {
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
 
+  useMountEffect(getStates);
+
   function getStates() {
     fetch("http://localhost:8081/homerent/homevaluestate",
       {
@@ -32,8 +34,6 @@ const Dashboard = (props) => {
         console.log(err);
       });
   }
-
-  useMountEffect(getStates);
 
   const StateContainer = () => {
     return (
