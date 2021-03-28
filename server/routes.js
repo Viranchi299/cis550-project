@@ -106,7 +106,7 @@ function getHomeValueByCity(req, res) {
     AND City = '${inputCity}'
   `;
   
-  connection.query(query_state_only, function(err, rows, fields) {
+  connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
