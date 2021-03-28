@@ -27,7 +27,6 @@ function getHomeValueByState(req, res) {
       console.log(err);
     }
     else {
-      // console.log(res.json(rows));
       res.json(rows);
     }
   });
@@ -56,6 +55,7 @@ function getRentByState(req, res) {
 
 /* ---- (Get States from Housing set - dropdown) ---- */
 function getStatesHousing(req, res) {
+  console.log("calling getStatesHousing...");
   var query = `
     SELECT DISTINCT State
     FROM HomePriceByLocation
@@ -67,15 +67,19 @@ function getStatesHousing(req, res) {
       res.json(rows);
     }
   });
+  // debugging... 
+  
+  console.log("completed getStatesHousing");
 }
 
 /* ---- (Get Cities from Housing set - dropdown) ---- */
 function getCitiesHousing(req, res) {
   var inputState = req.params.state
+  console.log("state is" + inputState);
   var query = `
     SELECT DISTINCT City
     FROM HomePriceByLocation
-    WHERE State = ${inputState}
+    WHERE State = '${inputState}'
     ORDER BY City ASC
   `;
   connection.query(query, function(err, rows, fields) {
@@ -88,6 +92,7 @@ function getCitiesHousing(req, res) {
 
 /* ---- (Get Home Value By City) ---- */
 function getHomeValueByCity(req, res) {
+  console.log("calling getHomeValueByCity...");
   var inputState = req.params.state
   var inputCity = req.params.city
   var query = `
@@ -97,8 +102,8 @@ function getHomeValueByCity(req, res) {
            ROUND(MAX(HomePriceValue),2) AS 'MaxHVP',
            ROUND(AVG(HomePriceValue),2) AS 'AvgHVP'
     FROM HomePriceByLocation
-    WHERE State = ${inputState}
-    AND City = ${inputCity}
+    WHERE State = '${inputState}'
+    AND City = '${inputCity}'
   `;
   
   connection.query(query_state_only, function(err, rows, fields) {
@@ -130,7 +135,7 @@ function getCitiesRent(req, res) {
   var query = `
     SELECT DISTINCT City
     FROM RentalPriceByLocation
-    WHERE State = ${inputState}
+    WHERE State = '${inputState}'
     ORDER BY City ASC
   `;
   connection.query(query, function(err, rows, fields) {
@@ -152,8 +157,8 @@ function getRentByCity(req, res) {
            ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
            ROUND(AVG(RentalPriceValue),2) AS 'AvgRent'
     FROM RentalPriceByLocation
-    WHERE State = ${inputState}
-    AND City = ${inputCity}
+    WHERE State = '${inputState}'
+    AND City = '${inputCity}'
   `;
   
   connection.query(query_state_only, function(err, rows, fields) {
@@ -228,8 +233,8 @@ function getEmployersBySalaryRange(req, res) {
           ORDER BY AvgSalary DESC
         )
     SELECT * FROM temp
-    WHERE State = ${inputState}
-    AND AvgSalary BETWEEN ${inputSalaryLow} AND ${inputSalaryHigh}
+    WHERE State = '${inputState}'
+    AND AvgSalary BETWEEN '${inputSalaryLow}' AND '${inputSalaryHigh}'
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
   `;
