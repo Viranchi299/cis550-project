@@ -45,7 +45,7 @@ Queries and descriptions
     AND City = ${inputCity}
  
 
-// Query 4: Rent by city and state
+// Query 4: Allow users to input state, and return home values by the inputted state
     SELECT City, 
            State, 
            ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
@@ -54,7 +54,7 @@ Queries and descriptions
     FROM RentalPriceByLocation
     WHERE State = ${inputState}
 
-// Query 5: Salary by state
+// Query 5: Salary by all states, so as to create heatmap of salaries by state
 
     SELECT State, 
            ROUND(MIN(Salary),2) AS 'MinSalary',
@@ -68,7 +68,7 @@ Queries and descriptions
     GROUP BY State
     ORDER BY State ASC
  
-// Query 6: Salary by employer and state
+// Query 6: Salary by employer for user-inputted state so that users know the highest-paying employers in the inputted state
 
     WITH temp(Employer, State, AvgSalary)
     AS ( 
