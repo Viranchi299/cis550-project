@@ -1,4 +1,4 @@
 server/node_modules
 client/node_modules
 Milestones/.DS_Store
-server/db-config.js
+server\db-config.js
