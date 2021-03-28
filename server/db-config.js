@@ -3,6 +3,6 @@ module.exports = {
   host: "housing-cis550-proj.cgkmdltes6oq.us-east-1.rds.amazonaws.com",
   port: "3306",
   user: "admin",
-  password: "Penn!!098",
+  password: "**will be emailed to TA**",
   database: "housing",
 };
