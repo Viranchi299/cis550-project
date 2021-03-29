@@ -6,7 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.6.0",
     "mocha": "^7.2.0",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
@@ -14,7 +14,8 @@
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
-    "selenium-webdriver": "^4.0.0-alpha.5"
+    "selenium-webdriver": "^4.0.0-alpha.5",
+    "us-state-converter": "^1.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
