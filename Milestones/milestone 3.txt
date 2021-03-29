@@ -68,23 +68,25 @@ Queries and descriptions
     GROUP BY State
     ORDER BY State ASC
  
-// Query 6: Salary by employer for user-inputted state so that users know the highest-paying employers in the inputted state
+// Query 6: Salary by employer for user-inputted state and city so that users know the highest-paying employers in the inputted state and city
 
-    WITH temp(Employer, State, AvgSalary)
+    WITH temp(Employer, State, City, AvgSalary)
     AS ( 
           SELECT EmployerName, 
           State,
+          City,
           ROUND(AVG(Salary),2) AS 'AvgSalary'
           FROM ( 
-                SELECT EmployerName, State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM VisaApplication WHERE PayUnit = 'Year'
                 UNION ALL
-                SELECT EmployerName, State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
               ) x
           GROUP BY EmployerName
           ORDER BY AvgSalary DESC
         )
     SELECT * FROM temp
     WHERE State = '${inputState}'
+    AND City = '${inputCity}'
     AND AvgSalary BETWEEN '${inputSalaryLow}' AND '${inputSalaryHigh}'
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
