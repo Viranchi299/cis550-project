@@ -23,7 +23,6 @@ Queries and descriptions
  
 
 // Query 2: Monthly Rent By State
-
     SELECT State, 
            ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
            ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
@@ -41,18 +40,19 @@ Queries and descriptions
            ROUND(MAX(HomePriceValue),2) AS 'MaxHVP',
            ROUND(AVG(HomePriceValue),2) AS 'AvgHVP'
     FROM HomePriceByLocation
-    WHERE State = ${inputState}
-    AND City = ${inputCity}
+    WHERE State = '${inputState}'
+    AND City = '${inputCity}'
  
 
-// Query 4: Allow users to input state, and return home values by the inputted state
+// Query 4: Allow users to input state and city, and return monthly rent by the inputted city and state
     SELECT City, 
            State, 
            ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
            ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
            ROUND(AVG(RentalPriceValue),2) AS 'AvgRent'
     FROM RentalPriceByLocation
-    WHERE State = ${inputState}
+    WHERE State = '${inputState}'
+    AND City = '${inputCity}'
 
 // Query 5: Salary by all states, so as to create heatmap of salaries by state
 
@@ -68,28 +68,30 @@ Queries and descriptions
     GROUP BY State
     ORDER BY State ASC
  
-// Query 6: Salary by employer for user-inputted state so that users know the highest-paying employers in the inputted state
+// Query 6: Salary by employer for user-inputted state and city so that users know the highest-paying employers in the inputted state and city
 
-    WITH temp(Employer, State, AvgSalary)
+    WITH temp(Employer, State, City, AvgSalary)
     AS ( 
           SELECT EmployerName, 
           State,
+          City,
           ROUND(AVG(Salary),2) AS 'AvgSalary'
           FROM ( 
-                SELECT EmployerName, State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM VisaApplication WHERE PayUnit = 'Year'
                 UNION ALL
-                SELECT EmployerName, State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
               ) x
           GROUP BY EmployerName
           ORDER BY AvgSalary DESC
         )
     SELECT * FROM temp
-    WHERE State = ${inputState}
-    AND AvgSalary BETWEEN ${inputSalaryLow} AND ${inputSalaryHigh}
+    WHERE State = '${inputState}'
+    AND City = '${inputCity}'
+    AND AvgSalary BETWEEN '${inputSalaryLow}' AND '${inputSalaryHigh}'
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
 
-// Query 7: Rent vs Salary by state
+// Query 7: Rent vs Salary by state; returns the % of salary that goes into rent by state on average
     WITH s(State, AvgMonthlySalary)
     AS (
         SELECT State, ROUND(AVG(Salary / 12),2) AS 'AvgMonthlySalary'
@@ -115,7 +117,7 @@ Queries and descriptions
     LEFT JOIN r ON s.State = r.State
  
 
-// Query 8: Home price vs salary by state
+// Query 8: Home price vs salary by state; returns the number of years of salary required to purchase a home based on the average price of a home by state. This is known as the House-Price-to-Income Ratio, and the rule of thumb is that the cost of one's house should equal roughly 2.6 years of income. 
 
     WITH s(State, AvgAnnualSalary)
     AS (

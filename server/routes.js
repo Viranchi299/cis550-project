@@ -162,7 +162,7 @@ function getRentByCity(req, res) {
     AND City = '${inputCity}'
   `;
   
-  connection.query(query_state_only, function(err, rows, fields) {
+  connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -188,7 +188,7 @@ function getSalaryByState(req, res) {
     ORDER BY State ASC
   `;
   
-  connection.query(query_state_only, function(err, rows, fields) {
+  connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -203,8 +203,27 @@ function getStatesSalary(req, res) {
     AS ( SELECT DISTINCT State FROM GreenCardApplication
          UNION
          SELECT DISTINCT State FROM VisaApplication )
-         SELECT State FROM temp 
-         ORDER BY State ASC
+    SELECT State FROM temp 
+    ORDER BY State ASC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+/* ---- (Get States from Salary sets - dropdown) ---- */
+function getCitiesSalary(req, res) {
+  var inputState = req.params.state
+  var query = `
+    WITH temp(City)
+    AS ( SELECT DISTINCT City FROM GreenCardApplication WHERE State = '${inputState}'
+         UNION
+         SELECT DISTINCT City FROM VisaApplication WHERE State = '${inputState}' )
+    SELECT City FROM temp 
+    ORDER BY City ASC
   `;
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -217,24 +236,27 @@ function getStatesSalary(req, res) {
 /* ---- (Get Employers by Salary Range and State) ---- */
 function getEmployersBySalaryRange(req, res) {
 	var inputState = req.params.state
+  var inputCity = req.params.city
   var inputSalaryLow = req.params.salary_low
   var inputSalaryHigh = req.params.salary_high
   var query = `
-    WITH temp(Employer, State, AvgSalary)
+    WITH temp(Employer, State, City, AvgSalary)
     AS ( 
           SELECT EmployerName, 
           State,
+          City,
           ROUND(AVG(Salary),2) AS 'AvgSalary'
           FROM ( 
-                SELECT EmployerName, State, Salary FROM VisaApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM VisaApplication WHERE PayUnit = 'Year'
                 UNION ALL
-                SELECT EmployerName, State, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
+                SELECT EmployerName, State, City, Salary FROM GreenCardApplication WHERE PayUnit = 'Year'
               ) x
           GROUP BY EmployerName
           ORDER BY AvgSalary DESC
         )
     SELECT * FROM temp
     WHERE State = '${inputState}'
+    AND City = '${inputCity}'
     AND AvgSalary BETWEEN '${inputSalaryLow}' AND '${inputSalaryHigh}'
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
@@ -332,6 +354,7 @@ module.exports = {
   getRentByCity: getRentByCity,
   getSalaryByState: getSalaryByState,
   getStatesSalary: getStatesSalary,
+  getCitiesSalary: getCitiesSalary,
   getEmployersBySalaryRange: getEmployersBySalaryRange,
   getRentVsSalaryByState: getRentVsSalaryByState,
   getHomeVsSalaryByState: getHomeVsSalaryByState

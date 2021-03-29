@@ -29,6 +29,7 @@ app.get('/homerent/:getstatesrent&:getcitiesrent', routes.getRentByCity);
 /* ---- (Salary Analysis) ---- */
 app.get('/salary/salarystate', routes.getSalaryByState);
 app.get('/salary/getstatessalary', routes.getStatesSalary);
+app.get('/salary/getcitiessalary', routes.getCitiesSalary);
 app.get('/salary/:getstatessalary&:salary_low&:salary_high', routes.getEmployersBySalaryRange);
 
 /* ---- (Housing and Rent Based on Salary Analysis) ---- */
