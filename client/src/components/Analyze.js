@@ -11,10 +11,16 @@ const Analyze = (props) => {
 	const [cityList, setCitiesList] = useState([]);
 	const [houses, setHouses] = useState([]);
 
-	const useMountEffect = (func) => useEffect(func, []);
+	// const useMountEffect = (func) => useEffect(func, []);
 
 	// call at very beginning so user can see all the states 
-	useMountEffect(loadStates);
+	// useMountEffect(loadStates);
+
+	// compare dependency and only re-render once (i.e., since we set states list in loadStates it only changes once.) could pass [] as well to
+	// tell react not to track dependencies. 
+	useEffect(() => {
+		loadStates();
+	}, [statesList.length]);
 
 	// set state for selected "state name e.g., FL" 
 	const handleChangeStateName = (event) => { 
@@ -159,6 +165,7 @@ const Analyze = (props) => {
 				<div className="jumbotron">
 					<div className="h5">States</div>
 					<StatesDropDown />
+					<br/>
 					<br/>
 					<div className="h5">Cities</div>
 					<CityDropDown />
