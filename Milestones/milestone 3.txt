@@ -12,7 +12,7 @@ Database: housing
 Queries and descriptions
 
 
-//Query 1: Home values by state
+//Query 1: Home values by state; returns min, max, and average home value price
     SELECT State, 
            ROUND(MIN(HomePriceValue),2) AS 'MinHVP',
            ROUND(MAX(HomePriceValue),2) AS 'MaxHVP',
@@ -22,7 +22,7 @@ Queries and descriptions
     ORDER BY State ASC
  
 
-// Query 2: Monthly Rent By State
+// Query 2: Monthly rent by state; returns min, max, and average monthly rent 
     SELECT State, 
            ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
            ROUND(MAX(RentalPriceValue),2) AS 'MaxRent',
@@ -33,7 +33,7 @@ Queries and descriptions
  
 
 
-//Query 3: Allow users to input state and city, and return home values by the inputted city and state
+//Query 3: Allows users to input state and city; returns min, max, and average home value price based on the inputted city and state
     SELECT City, 
            State, 
            ROUND(MIN(HomePriceValue),2) AS 'MinHVP',
@@ -44,7 +44,7 @@ Queries and descriptions
     AND City = '${inputCity}'
  
 
-// Query 4: Allow users to input state and city, and return monthly rent by the inputted city and state
+// Query 4: Allows users to input state and city; returns min, max, and average monthly rent based on the inputted city and state
     SELECT City, 
            State, 
            ROUND(MIN(RentalPriceValue),2) AS 'MinRent',
@@ -54,7 +54,7 @@ Queries and descriptions
     WHERE State = '${inputState}'
     AND City = '${inputCity}'
 
-// Query 5: Salary by all states, so as to create heatmap of salaries by state
+// Query 5: Min, max, and average salary by all states (will be used to create heatmap of salaries by state)
 
     SELECT State, 
            ROUND(MIN(Salary),2) AS 'MinSalary',
@@ -68,7 +68,7 @@ Queries and descriptions
     GROUP BY State
     ORDER BY State ASC
  
-// Query 6: Salary by employer for user-inputted state and city so that users know the highest-paying employers in the inputted state and city
+// Query 6: Average salary by employer for user-inputted state and city, so that users know the highest-paying employers in the inputted state and city
 
     WITH temp(Employer, State, City, AvgSalary)
     AS ( 
@@ -91,7 +91,7 @@ Queries and descriptions
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
 
-// Query 7: Rent vs Salary by state; returns the % of salary that goes into rent by state on average
+// Query 7: Monthly Rent vs Salary by state; returns the % of salary that goes into rent by state on average
     WITH s(State, AvgMonthlySalary)
     AS (
         SELECT State, ROUND(AVG(Salary / 12),2) AS 'AvgMonthlySalary'
