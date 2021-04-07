@@ -16,7 +16,7 @@ const Dashboard = () => {
   useMountEffect(getAllStatesData);
 
   function getAllStatesData() {
-    fetch("http://localhost:8081/homerent/homevaluestate",
+    fetch("http://localhost:8081/home/homevaluestate",
       {
         method: 'GET' // The type of HTTP request.
       }).then(res => {

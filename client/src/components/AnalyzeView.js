@@ -25,8 +25,8 @@ const AnalyzeView = (props) => {
     function loadStates() {
         const dataset = props.dataset;
         const endpoints = {
-            "Home": "/homerent/getstateshousing",
-            "Rent": "/homerent/rentpricestate",
+            "Home": "/home/getstateshousing",
+            "Rent": "/rent/getstatesrent",
             "Salary": "/salary/salarystate"
         }
         fetch(`http://localhost:8081${endpoints[dataset]}`,
@@ -54,8 +54,8 @@ const AnalyzeView = (props) => {
     function loadCities() {
         const dataset = props.dataset;
         const endpoints = {
-            "Home": "/homerent/getcitieshousing/",
-            "Rent": "/homerent/getcitiesrent/",
+            "Home": "/home/getcitieshousing/",
+            "Rent": "/rent/getcitiesrent/",
             "Salary": "/salary/getcitiessalary/"
         }
         console.log("Calling loadCities with:" + selectedState);
@@ -83,7 +83,7 @@ const AnalyzeView = (props) => {
     }
 
     function loadResults() {
-        return props.dataset === "Home" ? loadHomes : props.dataset === "Rent" ? loadRentals : loadSalaries
+        return props.dataset === "Home" ? (loadHomes) : props.dataset === "Rent" ? (loadRentals) : loadSalaries
     }
 
     function loadRentals() {
@@ -95,7 +95,7 @@ const AnalyzeView = (props) => {
     }
 
     function loadHomes() {
-        fetch(`http://localhost:8081/homerent/${selectedState}&${selectedCity}`,
+        fetch(`http://localhost:8081/home/${selectedState}&${selectedCity}`,
             {
                 method: 'GET' // The type of HTTP request.
             }).then(res => {
@@ -124,17 +124,47 @@ const AnalyzeView = (props) => {
             });
     }
 
-
-    // set state for selected "state name e.g., FL" 
-    const handleChangeStateName = (event) => {
-        setSelectedState(event.target.value);
+    function loadRentals() {
+        fetch(`http://localhost:8081/rent/${selectedState}&${selectedCity}`,
+            {
+                method: 'GET' // The type of HTTP request.
+            }).then(res => {
+                // Convert the response data to a JSON.
+                return res.json();
+            }, err => {
+                // Print the error if there is one.
+                console.log(err);
+            }).then((rentals) => {
+                if (!rentals) return;
+                let houseRows = rentals.map((house, i) =>
+                    <BestGenreRow
+                        City={house.City}
+                        State={house.State}
+                        MinHVP={house.MinRent}
+                        MaxHVP={house.MaxRent}
+                        AvgHVP={house.AvgRent} />
+                );
+                console.log(rentals);
+                //Set the state of the genres list to the value returned by the HTTP response from the server.
+                setResults(houseRows);
+                console.log(houseRows);
+            }, (err) => {
+                // Print the error if there is one.
+                console.log(err);
+            });
     }
 
-    // set the city for the relevant state, e.g., [Orlando] after FL was selected 
-    const handleChangeCityName = (event) => {
-        setSelectedCity(event.target.value);
-        console.log(selectedCity);
-    }
+
+    // // set state for selected "state name e.g., FL" 
+    // const handleChangeStateName = (event) => {
+    //     setSelectedState(event.target.value);
+    // }
+
+    // // set the city for the relevant state, e.g., [Orlando] after FL was selected 
+    // const handleChangeCityName = (event) => {
+    //     setSelectedCity(event.target.value);
+    //     console.log(selectedCity);
+    // }
 
 
 
@@ -142,7 +172,7 @@ const AnalyzeView = (props) => {
         (
             <div className="years-container">
                 <div className="dropdown-container">
-                    <select value={selectedState} onChange={handleChangeStateName} className="dropdown" id="decadesDropdown">
+                    <select value={selectedState} onChange={(e) => { setSelectedState(e.target.value) }} className="dropdown" id="decadesDropdown">
                         <option select value> -- select a state -- </option>
                         {statesList}
                     </select>
@@ -155,7 +185,7 @@ const AnalyzeView = (props) => {
         (
             <div className="citiesContainer">
                 <div className="dropdown-container">
-                    <select value={selectedCity} onChange={handleChangeCityName} className="dropdown" id="cityDropdown">
+                    <select value={selectedCity} onChange={(e) => { setSelectedCity(e.target.value) }} className="dropdown" id="cityDropdown">
                         <option select value> -- select a city -- </option>
                         {cityList}
                     </select>

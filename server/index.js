@@ -15,16 +15,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 /* ---- (Housing and Rent Analysis) ---- */
-app.get('/homerent/homevaluestate', routes.getHomeValueByState);
-app.get('/homerent/rentpricestate', routes.getRentByState);
+app.get('/home/homevaluestate', routes.getHomeValueByState);
+app.get('/rent/rentpricestate', routes.getRentByState);
 
-app.get('/homerent/getstateshousing', routes.getStatesHousing);
-app.get('/homerent/getcitieshousing/:state', routes.getCitiesHousing);
-app.get('/homerent/:getstateshousing&:getcitieshousing', routes.getHomeValueByCity);
+app.get('/home/getstateshousing', routes.getStatesHousing);
+app.get('/home/getcitieshousing/:state', routes.getCitiesHousing);
+app.get('/home/:state&:city', routes.getHomeValueByCity);
 
-app.get('/homerent/getstatesrent', routes.getStatesRent);
-app.get('/homerent/getcitiesrent/:state', routes.getCitiesRent);
-app.get('/homerent/:getstatesrent&:getcitiesrent', routes.getRentByCity);
+app.get('/rent/getstatesrent', routes.getStatesRent);
+app.get('/rent/getcitiesrent/:state', routes.getCitiesRent);
+app.get('/rent/:state&:city', routes.getRentByCity);
 
 /* ---- (Salary Analysis) ---- */
 app.get('/salary/salarystate', routes.getSalaryByState);

@@ -93,9 +93,9 @@ function getCitiesHousing(req, res) {
 /* ---- (Get Home Value By City) ---- */
 function getHomeValueByCity(req, res) {
   console.log("calling getHomeValueByCity...");
-  var inputState = req.params.getstateshousing
-  var inputCity = req.params.getcitieshousing
-  console.log(`input state is: ${inputState} and city is:${inputCity}`);
+  const inputState = req.params.state;
+  const inputCity = req.params.city;
+  console.log(`Called getHomeValueByCity and input state is: ${inputState} and city is:${inputCity}`);
   var query = `
     SELECT City, 
            State, 
@@ -117,6 +117,7 @@ function getHomeValueByCity(req, res) {
 
 /* ---- (Get States from Rent set - dropdown) ---- */
 function getStatesRent(req, res) {
+  console.log("Called getStatesRent...");
   var query = `
     SELECT DISTINCT State
     FROM RentalPriceByLocation
@@ -133,6 +134,7 @@ function getStatesRent(req, res) {
 /* ---- (Get Cities from Rent set - dropdown) ---- */
 function getCitiesRent(req, res) {
   var inputState = req.params.state
+  console.log(`Called getCitiesRent with state: ${inputState}`);
   var query = `
     SELECT DISTINCT City
     FROM RentalPriceByLocation
@@ -149,8 +151,9 @@ function getCitiesRent(req, res) {
 
 /* ---- (Get Rent By City) ---- */
 function getRentByCity(req, res) {
-  var inputState = req.params.state
-  var inputCity = req.params.city
+  const inputState = req.params.state;
+  const inputCity = req.params.city;
+  console.log(`Called getRentByCity with state: ${inputState} and city: ${inputCity}`);
   var query = `
     SELECT City, 
            State, 
@@ -161,7 +164,6 @@ function getRentByCity(req, res) {
     WHERE State = '${inputState}'
     AND City = '${inputCity}'
   `;
-  
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
