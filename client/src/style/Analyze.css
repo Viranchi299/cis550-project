@@ -1,0 +1,16 @@
+.center {
+position: absolute;
+  width: 800px;
+  height: 200px;
+  z-index: 15;
+  top: 50%;
+  left: 45%;
+  margin: -100px 0 0 -150px;
+  /* background: whitesmoke; */
+  }
+
+.choice {
+  width: 150px;
+  height: 60px;
+  padding: auto;
+}
