@@ -12,7 +12,7 @@ const AnalyzeView = (props) => {
     const [statesList, setStatesList] = useState([]);
     const [selectedCity, setSelectedCity] = useState("");
     const [cityList, setCitiesList] = useState([]);
-    const [houses, setHouses] = useState([]);
+    const [results, setResults] = useState([]);
 
     console.log("rendering analyze view with choice as: " + props.dataset);
     console.log("states list length " + statesList.length);
@@ -116,7 +116,7 @@ const AnalyzeView = (props) => {
                 );
                 console.log(houses);
                 //Set the state of the genres list to the value returned by the HTTP response from the server.
-                setHouses(houseRows);
+                setResults(houseRows);
                 console.log(houseRows);
             }, (err) => {
                 // Print the error if there is one.
@@ -178,7 +178,7 @@ const AnalyzeView = (props) => {
                     <div className="header"><strong>{props.col3}</strong></div>
                 </div>
                 <div className="movies-container" id="results">
-                    {houses}
+                    {results}
                 </div>
             </div>
         );
@@ -196,7 +196,7 @@ const AnalyzeView = (props) => {
                     <div className="header"><strong>Average House Price</strong></div>
                 </div>
                 <div className="movies-container" id="results">
-                    {houses}
+                    {results}
                 </div>
             </div>
         );
@@ -206,7 +206,7 @@ const AnalyzeView = (props) => {
     return (
         <div className="container bestgenres-container">
             <div className="jumbotron">
-                <Button className="category" variant="contained" color="primary" onClick={(e) => props.showChoices(true)}> Change Category </Button>
+                <Button className="category" variant="contained" color="primary" onClick={() => props.showChoices(true)}> Change Category </Button>
                 <div className="h5">States</div>
                 <StatesDropDown />
                 <br />
