@@ -138,8 +138,8 @@ const AnalyzeView = (props) => {
 
 
 
-    const StatesDropDown = () => {
-        return (
+    const statesDropDown = 
+        (
             <div className="years-container">
                 <div className="dropdown-container">
                     <select value={selectedState} onChange={handleChangeStateName} className="dropdown" id="decadesDropdown">
@@ -150,10 +150,9 @@ const AnalyzeView = (props) => {
                 </div>
             </div>
         );
-    }
 
-    const CityDropDown = () => {
-        return (
+    const cityDropdown =
+        (
             <div className="citiesContainer">
                 <div className="dropdown-container">
                     <select value={selectedCity} onChange={handleChangeCityName} className="dropdown" id="cityDropdown">
@@ -165,10 +164,9 @@ const AnalyzeView = (props) => {
                 </div>
             </div>
         );
-    }
 
-    const HousesContainer = (props) => {
-        return (
+    const HousesContainer = props => {
+     return  (
             <div className="movies-container">
                 <div className="movie">
                     <div className="header"><strong>City</strong></div>
@@ -185,7 +183,7 @@ const AnalyzeView = (props) => {
     }
 
 
-    const SalariesContainer = () => {
+    const SalariesContainer = props => {
         return (
             <div className="movies-container">
                 <div className="movie">
@@ -208,11 +206,11 @@ const AnalyzeView = (props) => {
             <div className="jumbotron">
                 <Button className="category" variant="contained" color="primary" onClick={() => props.showChoices(true)}> Change Category </Button>
                 <div className="h5">States</div>
-                <StatesDropDown />
+                {statesDropDown}
                 <br />
                 <br />
                 <div className="h5">Cities</div>
-                <CityDropDown />
+                {cityDropdown}
             </div>
             <div className="jumbotron">
                 {props.dataset === "Home" ?

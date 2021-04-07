@@ -40,8 +40,7 @@ const Dashboard = () => {
       });
     }
 
-  const StateTableData = () => {
-    return (
+  const stateTableData = ( 
     <table className="table table-hover table-striped">
           <thead className="table-dark">
             <tr>
@@ -54,16 +53,14 @@ const Dashboard = () => {
           <tbody>
           {stateRows}
           </tbody>
-    </table>
-    );
-  }
+    </table>);
 
   return (
     <div className="Dashboard">
       <PageNavbar active="dashboard" />
       <br></br>
       <div className="jumbotron">
-        <StateTableData/>
+        {stateTableData}
       </div>
     </div>
   );
