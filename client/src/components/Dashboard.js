@@ -4,12 +4,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 import DashboardStateRow from './DashboardStateRow';
 
+import ReactTooltip from "react-tooltip";
+import MapChart from "./MapChart";
+
 // library to convert state abbreviations, e.g. AL to Alabama. 
 const allStates = require('us-state-converter');
 
 
 const Dashboard = () => {
   const [stateRows, setStateRows] = useState([]);
+
+  const [statesQueryRes, setStatesQueryRes] = useState([]);
+
+  const [content, setContent] = useState(null);
+
+
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
 
@@ -28,8 +37,11 @@ const Dashboard = () => {
       }).then((stateList) => {
         console.log(stateList);
         if (!stateList) return;
+        // map array of objects to object of objects so we can index by state initial e.g., "AL"... 
+        const newObj = Object.assign({}, ...(stateList.map(item => ({ [item.State]: {MinHVP: item.MinHVP, MaxHVP: item.MaxHVP, AvgHVP: item.AvgHVP} }) )));
+        setStatesQueryRes(newObj);
         let states = stateList.map((state, i) =>
-          <DashboardStateRow state={allStates.fullName(state.State)} minHVP={state.MinHVP.toLocaleString(undefined)} 
+          <DashboardStateRow state={state.State === "OR" ? "Oregon" : allStates.fullName(state.State)} minHVP={state.MinHVP.toLocaleString(undefined)} 
           MaxHVP={state.MaxHVP.toLocaleString(undefined)}
           AvgHVP={state.AvgHVP.toLocaleString(undefined)} />
         );
@@ -59,8 +71,12 @@ const Dashboard = () => {
     <div className="Dashboard">
       <PageNavbar active="dashboard" />
       <br></br>
-      <div className="jumbotron">
-        {stateTableData}
+      {/* <div className="jumbotron"> */}
+        {/* {stateTableData} */}
+      {/* </div> */}
+      <div>
+      <MapChart setTooltipContent={setContent} statesQueryRes={statesQueryRes} />
+      <ReactTooltip>{content}</ReactTooltip>
       </div>
     </div>
   );

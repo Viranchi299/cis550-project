@@ -1,1 +1,6 @@
-{}
+{
+  "dependencies": {
+    "react-simple-maps": "^2.3.0",
+    "react-tooltip": "^4.2.17"
+  }
+}
