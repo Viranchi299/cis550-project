@@ -24,35 +24,31 @@ const offsets = {
     MD: [47, 10],
     DC: [49, 21],
   };
+
+  const rounded = num => {
+    if (num > 1000000000) {
+      return Math.round(num / 100000000) / 10 + "Bn";
+    } else if (num > 1000000) {
+      return Math.round(num / 100000) / 10 + "M";
+    } else {
+      return Math.round(num / 100) / 10 + "K";
+    }
+  };
+  
   
 
 const MapChart = ({ statesQueryRes, setTooltipContent }) => {
-    console.log(statesQueryRes.WA);
+    
     const handleMouseEnter = (stateAbbreviation) => {
-        // console.log("In handleMouseEnter ... abbrev is: [" + stateAbbreviation + "]");
-        // console.log("Object for abbrev is is: [" + statesQueryRes[stateAbbreviation] + "]");
-        setTooltipContent(
-            `Min Housing Value is: ${statesQueryRes[stateAbbreviation].MinHVP} \n
-            Avg Housing Value is: ${statesQueryRes[stateAbbreviation].AvgHVP}\n
-            Max Housing Value is: ${statesQueryRes[stateAbbreviation].MaxHVP}`);
+        const text = `Min Housing Value is: $${rounded(statesQueryRes[stateAbbreviation].MinHVP)} <br/>
+        Avg Housing Value is: $${rounded(statesQueryRes[stateAbbreviation].AvgHVP)}<br/>
+        Max Housing Value is: $${rounded(statesQueryRes[stateAbbreviation].MaxHVP)}`
+        setTooltipContent(text);
     }
 
-    // const handleMouseEnter = (stateName) => {
-    //     const stateName1 = "yellow";
-
-    //     setTooltipContent({
-    //         name: JSON.stringify(stateName1),
-    //         electTotal: JSON.stringify(stateName1),
-    //         eevp: JSON.stringify(stateName1),
-    //         // winner: winner ? winner.name_display : null,
-    //         // imgUrl: winner ? winner.img_url : null,
-    //       });
-    //       ReactTooltip.rebuild();
-    // };
-
     return (
-        <ComposableMap data-tip="" projection="geoAlbersUsa">
-          <Geographies geography={geoUrl}>
+        <ComposableMap projection="geoAlbersUsa">
+          <Geographies data-tip="" geography={geoUrl}>
             {({ geographies }) => (
               <>
                 {geographies.map((geo) => {
@@ -63,20 +59,6 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
                       stroke="#FFF"
                       geography={geo}
                       fill="#DDD"
-                      style={{
-                        default: {
-                        //   fill: fillColor,
-                          outline: 'none',
-                        },
-                        hover: {
-                        //   fill: fillColor,
-                          outline: 'none',
-                        },
-                        pressed: {
-                        //   fill: fillColor,
-                          outline: 'none',
-                        },
-                      }}
                       onMouseEnter={() => {
                         // const { NAME, POP_EST } = geo.properties;
                         // setTooltipContent(`${NAME} — `);
@@ -85,10 +67,9 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
                         handleMouseEnter(stateAbbrev.id);
                       }}
                       onMouseLeave={() => {
-                        setTooltipContent("");
+                        setTooltipContent(null);
                       }}
-                    //   onMouseEnter={() => handleMouseEnter(geo.id)}
-                    //   onMouseLeave={() => setTooltipContent(null)}
+
                     />
                   );
                 })}
@@ -96,25 +77,20 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
                   const centroid = geoCentroid(geo);
                   const cur = allStates.find((s) => s.val === geo.id);
                   // cur.id is state name. 
-                  console.log(cur.id);
+                //   console.log(cur.id);
                 //   const fillColor = getStateWinnerColor(geo.id);
                   return (
                     <g key={geo.rsmKey + '-name'}>
                       {cur &&
                         centroid[0] > -160 &&
                         centroid[0] < -67 &&
+                        // if state abbrev not in offset list put abbrev in state else annotate outside. 
                         (Object.keys(offsets).indexOf(cur.id) === -1 ? (
                           <Marker coordinates={centroid}>
                             <text
                               y="2"
                               fontSize={14}
                               textAnchor="middle"
-                            //   fill={
-                            //     fillColor === constants.LIGHT_RED ||
-                            //     fillColor === constants.LIGHT_BLUE
-                            //       ? '#000'
-                            //       : '#FFF'
-                            //   }
                             >
                               {cur.id}
                             </text>

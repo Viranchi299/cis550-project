@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const [statesQueryRes, setStatesQueryRes] = useState([]);
 
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState("");
 
 
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
@@ -75,8 +75,8 @@ const Dashboard = () => {
         {/* {stateTableData} */}
       {/* </div> */}
       <div>
-      <MapChart setTooltipContent={setContent} statesQueryRes={statesQueryRes} />
-      <ReactTooltip>{content}</ReactTooltip>
+        <MapChart setTooltipContent={setContent} statesQueryRes={statesQueryRes} />
+        <ReactTooltip html={true}> {content} </ReactTooltip>
       </div>
     </div>
   );
