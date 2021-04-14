@@ -18,6 +18,11 @@
   background-color: #ddd;
 } */
 
+.content {
+  max-width: 500px;
+  margin: auto;
+}
+
 .movies-container .movies-header,
 .results-container .movie {
   display: flex;
@@ -40,5 +45,12 @@
 .choice {
   width: 150px;
   height: 60px;
-  padding: auto;
+  padding: 100px;
+  margin: 100px;
+  border: 100px;
+}
+
+.choice:focus {
+  background-color: rgb(57, 140, 240);
+  color: white;
 }

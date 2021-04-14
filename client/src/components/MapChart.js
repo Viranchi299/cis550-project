@@ -73,17 +73,18 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
   // let maxAvg =
 
   const handleMouseEnter = (stateAbbreviation) => {
-    let textV = "Salary";
-    const text = `Min ${textV}: $${rounded(
-      statesQueryRes[stateAbbreviation].Min
-    )} <br/>
-        Avg Housing Value: $${rounded(
-          statesQueryRes[stateAbbreviation].Avg
-        )}<br/>
-        Max Housing Value: $${rounded(statesQueryRes[stateAbbreviation].Max)}`;
+    let text;
+    if (statesQueryRes[stateAbbreviation]) {
+      text = `Mean: $${rounded(statesQueryRes[stateAbbreviation].Avg)} <br/>
+        Min: $${rounded(statesQueryRes[stateAbbreviation].Min)}<br/>
+        Max: $${rounded(statesQueryRes[stateAbbreviation].Max)}`;
+    } else {
+      text = "No data available";
+    }
     setTooltipContent(text);
   };
 
+  //returns value between 1-10 for heatmap coloring
   const findStateDecile = (stateAbbreviation) => {
     //let g = statesQueryRes[stateAbbreviation].Avg;
     console.log("finding decile");
@@ -94,8 +95,9 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
       ? statesQueryRes[stateAbbreviation].Avg
       : null;
 
+    //determine decile based on state's average value vs min and max average values
     if (vals) {
-      return ((vals - minAvg) / (maxAvg - minAvg)) * 10;
+      return ((vals - minAvg) / (maxAvg - minAvg)) * 10 + 1;
     } else {
       return 0;
     }
@@ -109,7 +111,12 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
   //takes in a state id, return an RGB color
 
   return (
-    <ComposableMap projection="geoAlbersUsa">
+    <ComposableMap
+      projection="geoAlbersUsa"
+      // width={800}
+      // height={400}
+      style={{ width: "50%", height: "auto", margin: "auto" }}
+    >
       <Geographies data-tip="" geography={geoUrl}>
         {({ geographies }) => (
           <>

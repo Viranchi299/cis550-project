@@ -23,8 +23,8 @@ const Dashboard = () => {
 
   let choice = "salary"; //test
 
-  useMountEffect(getAllStatesHousePriceData);
-  useMountEffect(getAllStatesSalaryData);
+  //useMountEffect(getAllStatesHousePriceData);
+  //useMountEffect(getAllStatesSalaryData);
 
   //"http://localhost:8081/home/homevaluestate"
 
