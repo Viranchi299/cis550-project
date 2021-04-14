@@ -15,6 +15,8 @@
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
+    "react-simple-maps": "^2.3.0",
+    "react-tooltip": "^4.2.17",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "us-state-converter": "^1.0.5"
   },
