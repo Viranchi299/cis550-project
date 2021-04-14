@@ -40,6 +40,7 @@ const colorScale = scaleQuantize()
     "#782618",
   ]);
 
+//to-do: don't apply rounding to house price index data
 const rounded = (num) => {
   if (num > 1000000000) {
     return Math.round(num / 100000000) / 10 + "Bn";
@@ -62,8 +63,10 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
 
   for (const [key, value] of Object.entries(statesQueryRes)) {
     console.log(value.Avg);
-    minAvg = value.Avg < minAvg ? value.Avg : minAvg;
-    maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+    if (value.Avg != null) {
+      minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+      maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+    }
   }
 
   console.log("MIN AND MAX AVERAGE VALUES");

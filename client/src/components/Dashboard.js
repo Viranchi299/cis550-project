@@ -232,9 +232,22 @@ const Dashboard = () => {
                   ? "Oregon"
                   : allStates.fullName(state.State)
               }
-              // minHVP={state.AvgAnnualSalary.toLocaleString(undefined)}
-              // MaxHVP={state.AvgHomePrice.toLocaleString(undefined)}
-              // AvgHVP={state.YearsToBuyHome.toLocaleString(undefined)}
+              //added ternary operators to avoid errors with null data
+              minHVP={
+                state.AvgAnnualSalary
+                  ? state.AvgAnnualSalary.toLocaleString(undefined)
+                  : ""
+              }
+              MaxHVP={
+                state.AvgHomePrice
+                  ? state.AvgHomePrice.toLocaleString(undefined)
+                  : ""
+              }
+              AvgHVP={
+                state.YearsToBuyHome
+                  ? state.YearsToBuyHome.toLocaleString(undefined)
+                  : ""
+              }
             />
           ));
           setStateRows(states);
