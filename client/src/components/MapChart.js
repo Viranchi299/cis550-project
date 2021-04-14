@@ -10,6 +10,7 @@ import { geoCentroid } from "d3-geo";
 import allStates from "./allStates.json";
 import ReactTooltip from "react-tooltip";
 import { scaleQuantize } from "d3-scale";
+import "../style/Dashboard.css";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -87,25 +88,21 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
   //returns value between 1-10 for heatmap coloring
   const findStateDecile = (stateAbbreviation) => {
     //let g = statesQueryRes[stateAbbreviation].Avg;
-    console.log("finding decile");
-    console.log(statesQueryRes);
-    console.log(stateAbbreviation);
-    console.log("honing in");
+    // console.log("finding decile");
+    // console.log(statesQueryRes);
+    // console.log(stateAbbreviation);
+    //console.log("honing in");
     let vals = statesQueryRes[stateAbbreviation]
       ? statesQueryRes[stateAbbreviation].Avg
       : null;
 
     //determine decile based on state's average value vs min and max average values
     if (vals) {
+      //return 5;
       return ((vals - minAvg) / (maxAvg - minAvg)) * 10 + 1;
     } else {
       return 0;
     }
-    console.log(vals);
-    // let decile =
-    //   ((statesQueryRes[stateAbbreviation].Avg - minAvg) / (maxAvg - minAvg)) *
-    //   10;
-    return 5;
   };
 
   //takes in a state id, return an RGB color
@@ -115,7 +112,8 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
       projection="geoAlbersUsa"
       // width={800}
       // height={400}
-      style={{ width: "50%", height: "auto", margin: "auto" }}
+      id="usmap"
+      // style={{ width: "50%", height: "auto" }}
     >
       <Geographies data-tip="" geography={geoUrl}>
         {({ geographies }) => (

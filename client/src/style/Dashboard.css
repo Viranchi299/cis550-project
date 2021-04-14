@@ -18,6 +18,11 @@
   background-color: #ddd;
 } */
 
+#usmap {
+  margin: auto;
+  width: 55%;
+}
+
 .content {
   max-width: 500px;
   margin: auto;

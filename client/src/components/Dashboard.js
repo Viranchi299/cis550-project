@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   let choice = "salary"; //test
 
-  //useMountEffect(getAllStatesHousePriceData);
+  //useMountEffect(getAllStatesHousePriceIndexData);
   //useMountEffect(getAllStatesSalaryData);
 
   //"http://localhost:8081/home/homevaluestate"
@@ -192,6 +192,60 @@ const Dashboard = () => {
       );
   }
 
+  function getAllStatesHousePriceIndexData() {
+    console.log("Hoice");
+    console.log(choice);
+    fetch("http://localhost:8081/homerentsalary/homesalary", {
+      method: "GET", // The type of HTTP request.
+    })
+      .then(
+        (res) => {
+          // Convert the response data to a JSON.
+          return res.json();
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      )
+      .then(
+        (stateList) => {
+          console.log("StateList: ");
+          console.log(stateList);
+          if (!stateList) return;
+          // map array of objects to object of objects so we can index by state initial e.g., "AL"...
+          const newObj = Object.assign(
+            {},
+            ...stateList.map((item) => ({
+              [item.State]: {
+                Min: item.AvgAnnualSalary,
+                Max: item.AvgHomePrice,
+                Avg: item.YearsToBuyHome,
+              },
+            }))
+          );
+          setStatesQueryRes(newObj);
+          let states = stateList.map((state, i) => (
+            <DashboardStateRow
+              state={
+                state.State === "OR"
+                  ? "Oregon"
+                  : allStates.fullName(state.State)
+              }
+              // minHVP={state.AvgAnnualSalary.toLocaleString(undefined)}
+              // MaxHVP={state.AvgHomePrice.toLocaleString(undefined)}
+              // AvgHVP={state.YearsToBuyHome.toLocaleString(undefined)}
+            />
+          ));
+          setStateRows(states);
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      );
+  }
+
   const stateTableData = (
     <table className="table table-hover table-striped">
       <thead className="table-dark">
@@ -214,35 +268,44 @@ const Dashboard = () => {
       {/* {stateTableData} */}
       {/* </div> */}
       <div>
-        <Button
-          className="choice"
-          variant="contained"
-          onClick={() => getAllStatesHousePriceData()}
-        >
-          Home Values
-        </Button>
-        <Button
-          className="choice"
-          variant="contained"
-          onClick={() => getAllStatesRentalData()}
-        >
-          Rental Values
-        </Button>
-        <Button
-          className="choice"
-          variant="contained"
-          onClick={() => getAllStatesSalaryData()}
-        >
-          Salaries
-        </Button>
-      </div>
+        <div>
+          <Button
+            className="choice"
+            variant="contained"
+            onClick={() => getAllStatesHousePriceData()}
+          >
+            Home Values
+          </Button>
+          <Button
+            className="choice"
+            variant="contained"
+            onClick={() => getAllStatesRentalData()}
+          >
+            Rental Values
+          </Button>
+          <Button
+            className="choice"
+            variant="contained"
+            onClick={() => getAllStatesSalaryData()}
+          >
+            Salaries
+          </Button>
+          <Button
+            className="choice"
+            variant="contained"
+            onClick={() => getAllStatesHousePriceIndexData()}
+          >
+            House Price Index
+          </Button>
+        </div>
 
-      <div>
-        <MapChart
-          setTooltipContent={setContent}
-          statesQueryRes={statesQueryRes}
-        />
-        <ReactTooltip html={true}> {content} </ReactTooltip>
+        <div>
+          <MapChart
+            setTooltipContent={setContent}
+            statesQueryRes={statesQueryRes}
+          />
+          <ReactTooltip html={true}> {content} </ReactTooltip>
+        </div>
       </div>
     </div>
   );
