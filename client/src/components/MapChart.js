@@ -9,6 +9,7 @@ import {
 import { geoCentroid } from "d3-geo";
 import allStates from "./allStates.json";
 import ReactTooltip from "react-tooltip";
+import { scaleQuantize } from "d3-scale";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -23,6 +24,20 @@ const offsets = {
   MD: [47, 10],
   DC: [49, 21],
 };
+
+const colorScale = scaleQuantize()
+  .domain([1, 10])
+  .range([
+    "#ffedea",
+    "#ffcec5",
+    "#ffad9f",
+    "#ff8a75",
+    "#ff5533",
+    "#e2492d",
+    "#be3d26",
+    "#9a311f",
+    "#782618",
+  ]);
 
 const rounded = (num) => {
   if (num > 1000000000) {
@@ -41,6 +56,22 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
   console.log("StatesQueryRes:");
   console.log(statesQueryRes);
 
+  let minAvg = 1000000000; //to-do: set to math.max
+  let maxAvg = -1000000000; //to-do: set to math.min
+
+  for (const [key, value] of Object.entries(statesQueryRes)) {
+    console.log(value.Avg);
+    minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+    maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+  }
+
+  console.log("MIN AND MAX AVERAGE VALUES");
+  console.log(minAvg);
+  console.log(maxAvg);
+
+  // let minAvg =
+  // let maxAvg =
+
   const handleMouseEnter = (stateAbbreviation) => {
     let textV = "Salary";
     const text = `Min ${textV}: $${rounded(
@@ -53,19 +84,55 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
     setTooltipContent(text);
   };
 
+  const findStateDecile = (stateAbbreviation) => {
+    //let g = statesQueryRes[stateAbbreviation].Avg;
+    console.log("finding decile");
+    console.log(statesQueryRes);
+    console.log(stateAbbreviation);
+    console.log("honing in");
+    let vals = statesQueryRes[stateAbbreviation]
+      ? statesQueryRes[stateAbbreviation].Avg
+      : null;
+
+    if (vals) {
+      return ((vals - minAvg) / (maxAvg - minAvg)) * 10;
+    } else {
+      return 0;
+    }
+    console.log(vals);
+    // let decile =
+    //   ((statesQueryRes[stateAbbreviation].Avg - minAvg) / (maxAvg - minAvg)) *
+    //   10;
+    return 5;
+  };
+
+  //takes in a state id, return an RGB color
+
   return (
     <ComposableMap projection="geoAlbersUsa">
       <Geographies data-tip="" geography={geoUrl}>
         {({ geographies }) => (
           <>
             {geographies.map((geo) => {
+              //console.log("GEO");
+              //console.log(geo);
+              let color;
               //   const fillColor = getStateWinnerColor(geo.id);
+              if (geo.id === "20") {
+                color = "CCC";
+              } else {
+                color = "#ABC";
+              }
+              //let decile = geo.id % 10;
+              const stateAbbrev = allStates.find((s) => s.val === geo.id);
+              let decile = findStateDecile(stateAbbrev.id);
               return (
                 <Geography
                   key={geo.rsmKey}
                   stroke="#FFF"
                   geography={geo}
-                  fill="#DDD"
+                  // fill={color}
+                  fill={colorScale(decile)}
                   onMouseEnter={() => {
                     // const { NAME, POP_EST } = geo.properties;
                     // setTooltipContent(`${NAME} — `);
