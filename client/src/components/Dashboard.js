@@ -21,7 +21,7 @@ const Dashboard = () => {
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
 
-  let choice = "salary";
+  let choice = "salary"; //test
 
   useMountEffect(getAllStatesHousePriceData);
   useMountEffect(getAllStatesSalaryData);
