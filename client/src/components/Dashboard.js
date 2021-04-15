@@ -345,6 +345,96 @@ const Dashboard = () => {
       );
   }
 
+  function getAllStatesHouseRentalIndexData() {
+    console.log("Hoice");
+    console.log(choice);
+    fetch("http://localhost:8081/homerentsalary/rentsalary", {
+      method: "GET", // The type of HTTP request.
+    })
+      .then(
+        (res) => {
+          // Convert the response data to a JSON.
+          return res.json();
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      )
+      .then(
+        (stateList) => {
+          console.log("StateList: ");
+          console.log(stateList);
+          if (!stateList) return;
+          // map array of objects to object of objects so we can index by state initial e.g., "AL"...
+          const newObj = Object.assign(
+            {},
+            ...stateList.map((item) => ({
+              [item.State]: {
+                Min: item.AvgMonthlySalary,
+                Max: item.AvgMonthlyRent,
+                Avg: item.PercRentOfMonthlySalary,
+              },
+            }))
+          );
+          console.log("New obj");
+          console.log(newObj);
+          setStatesQueryRes(newObj);
+
+          console.log("New obj:");
+          console.log(newObj);
+          let minAvg = 1000000000; //to-do: set to math.max
+          let maxAvg = -1000000000; //to-do: set to math.min
+
+          for (const [key, value] of Object.entries(newObj)) {
+            console.log(value.Avg);
+            if (value.Avg != null) {
+              minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+              maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+            }
+          }
+
+          setMin(Math.floor(minAvg));
+          setMax(Math.ceil(maxAvg));
+          console.log("Min------------");
+          console.log(minAvg);
+          console.log("Max-----------");
+          console.log(maxAvg);
+
+          let states = stateList.map((state, i) => (
+            <DashboardStateRow
+              state={
+                state.State === "OR"
+                  ? "Oregon"
+                  : allStates.fullName(state.State)
+              }
+              //added ternary operators to avoid errors with null data
+              minHVP={
+                state.AvgAnnualSalary
+                  ? state.AvgAnnualSalary.toLocaleString(undefined)
+                  : ""
+              }
+              MaxHVP={
+                state.AvgHomePrice
+                  ? state.AvgHomePrice.toLocaleString(undefined)
+                  : ""
+              }
+              AvgHVP={
+                state.YearsToBuyHome
+                  ? state.YearsToBuyHome.toLocaleString(undefined)
+                  : ""
+              }
+            />
+          ));
+          setStateRows(states);
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      );
+  }
+
   const stateTableData = (
     <table className="table table-hover table-striped">
       <thead className="table-dark">
@@ -399,6 +489,13 @@ const Dashboard = () => {
             onClick={() => getAllStatesHousePriceIndexData()}
           >
             House Price Index
+          </Button>
+          <Button
+            className="choice"
+            variant="contained"
+            onClick={() => getAllStatesHouseRentalIndexData()}
+          >
+            Rental Index
           </Button>
         </div>
         <br></br>

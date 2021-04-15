@@ -300,7 +300,7 @@ function getRentVsSalaryByState(req, res) {
     SELECT s.State, 
            s.AvgMonthlySalary, 
            r.AvgMonthlyRent, 
-           (r.AvgMonthlyRent / s.AvgMonthlySalary * 100) AS '%RentOfMonthlySalary'
+           (r.AvgMonthlyRent / s.AvgMonthlySalary * 100) AS 'PercRentOfMonthlySalary'
     FROM s
     LEFT JOIN r ON s.State = r.State
   `;
