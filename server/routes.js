@@ -1,5 +1,5 @@
-var config = require('./db-config.js');
-var mysql = require('mysql');
+var config = require("./db-config.js");
+var mysql = require("mysql");
 
 config.connectionLimit = 10;
 var connection = mysql.createPool(config);
@@ -21,12 +21,11 @@ function getHomeValueByState(req, res) {
     GROUP BY State
     ORDER BY State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) {
       console.log("WENT WRONG!!!!!!!!!!!!!\n");
       console.log(err);
-    }
-    else {
+    } else {
       res.json(rows);
     }
   });
@@ -43,7 +42,7 @@ function getRentByState(req, res) {
     GROUP BY State
     ORDER BY State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -61,20 +60,20 @@ function getStatesHousing(req, res) {
     FROM HomePriceByLocation
     ORDER BY State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  // debugging... 
-  
+  // debugging...
+
   console.log("completed getStatesHousing");
 }
 
 /* ---- (Get Cities from Housing set - dropdown) ---- */
 function getCitiesHousing(req, res) {
-  var inputState = req.params.state
+  var inputState = req.params.state;
   console.log("state is" + inputState);
   var query = `
     SELECT DISTINCT City
@@ -82,7 +81,7 @@ function getCitiesHousing(req, res) {
     WHERE State = '${inputState}'
     ORDER BY City ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -95,7 +94,9 @@ function getHomeValueByCity(req, res) {
   console.log("calling getHomeValueByCity...");
   const inputState = req.params.state;
   const inputCity = req.params.city;
-  console.log(`Called getHomeValueByCity and input state is: ${inputState} and city is:${inputCity}`);
+  console.log(
+    `Called getHomeValueByCity and input state is: ${inputState} and city is:${inputCity}`
+  );
   var query = `
     SELECT City, 
            State, 
@@ -106,14 +107,14 @@ function getHomeValueByCity(req, res) {
     WHERE State = '${inputState}'
     AND City = '${inputCity}'
   `;
-  
-  connection.query(query, function(err, rows, fields) {
+
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-};
+}
 
 /* ---- (Get States from Rent set - dropdown) ---- */
 function getStatesRent(req, res) {
@@ -123,7 +124,7 @@ function getStatesRent(req, res) {
     FROM RentalPriceByLocation
     ORDER BY State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -133,7 +134,7 @@ function getStatesRent(req, res) {
 
 /* ---- (Get Cities from Rent set - dropdown) ---- */
 function getCitiesRent(req, res) {
-  var inputState = req.params.state
+  var inputState = req.params.state;
   console.log(`Called getCitiesRent with state: ${inputState}`);
   var query = `
     SELECT DISTINCT City
@@ -141,7 +142,7 @@ function getCitiesRent(req, res) {
     WHERE State = '${inputState}'
     ORDER BY City ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -153,7 +154,9 @@ function getCitiesRent(req, res) {
 function getRentByCity(req, res) {
   const inputState = req.params.state;
   const inputCity = req.params.city;
-  console.log(`Called getRentByCity with state: ${inputState} and city: ${inputCity}`);
+  console.log(
+    `Called getRentByCity with state: ${inputState} and city: ${inputCity}`
+  );
   var query = `
     SELECT City, 
            State, 
@@ -164,13 +167,13 @@ function getRentByCity(req, res) {
     WHERE State = '${inputState}'
     AND City = '${inputCity}'
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-};
+}
 
 // Salary Analysis: State-Level breakdown
 // Combines both LCA and Green Card data
@@ -189,14 +192,14 @@ function getSalaryByState(req, res) {
     GROUP BY State
     ORDER BY State ASC
   `;
-  
-  connection.query(query, function(err, rows, fields) {
+
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-};
+}
 
 /* ---- (Get States from Salary sets - dropdown) ---- */
 function getStatesSalary(req, res) {
@@ -208,7 +211,7 @@ function getStatesSalary(req, res) {
     SELECT State FROM temp 
     ORDER BY State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -218,7 +221,7 @@ function getStatesSalary(req, res) {
 
 /* ---- (Get States from Salary sets - dropdown) ---- */
 function getCitiesSalary(req, res) {
-  var inputState = req.params.state
+  var inputState = req.params.state;
   var query = `
     WITH temp(City)
     AS ( SELECT DISTINCT City FROM GreenCardApplication WHERE State = '${inputState}'
@@ -227,7 +230,7 @@ function getCitiesSalary(req, res) {
     SELECT City FROM temp 
     ORDER BY City ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -235,12 +238,13 @@ function getCitiesSalary(req, res) {
   });
 }
 
+//TO-DO
 /* ---- (Get Employers by Salary Range and State) ---- */
 function getEmployersBySalaryRange(req, res) {
-	var inputState = req.params.state
-  var inputCity = req.params.city
-  var inputSalaryLow = req.params.salary_low
-  var inputSalaryHigh = req.params.salary_high
+  var inputState = req.params.state;
+  var inputCity = req.params.city;
+  var inputSalaryLow = req.params.salary_low;
+  var inputSalaryHigh = req.params.salary_high;
   var query = `
     WITH temp(Employer, State, City, AvgSalary)
     AS ( 
@@ -263,7 +267,7 @@ function getEmployersBySalaryRange(req, res) {
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -271,9 +275,10 @@ function getEmployersBySalaryRange(req, res) {
   });
 }
 
+//To-DO
 /* ---- (Get Rent vs Salary) ---- */
 function getRentVsSalaryByState(req, res) {
-  inputState = req.params.state
+  inputState = req.params.state;
   var query = `
     WITH s(State, AvgMonthlySalary)
     AS (
@@ -299,7 +304,7 @@ function getRentVsSalaryByState(req, res) {
     FROM s
     LEFT JOIN r ON s.State = r.State
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -309,7 +314,7 @@ function getRentVsSalaryByState(req, res) {
 
 /* ---- (Get Home Price vs Salary) ---- */
 function getHomeVsSalaryByState(req, res) {
-  inputState = req.params.state
+  inputState = req.params.state;
   var query = `
     WITH s(State, AvgAnnualSalary)
     AS (
@@ -336,7 +341,7 @@ function getHomeVsSalaryByState(req, res) {
     LEFT JOIN h ON s.State = h.State
     ORDER BY YearsToBuyHome DESC
   `;
-  connection.query(query, function(err, rows, fields) {
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -359,5 +364,5 @@ module.exports = {
   getCitiesSalary: getCitiesSalary,
   getEmployersBySalaryRange: getEmployersBySalaryRange,
   getRentVsSalaryByState: getRentVsSalaryByState,
-  getHomeVsSalaryByState: getHomeVsSalaryByState
-}
+  getHomeVsSalaryByState: getHomeVsSalaryByState,
+};

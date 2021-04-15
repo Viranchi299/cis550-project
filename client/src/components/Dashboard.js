@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../style/Dashboard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, makeStyles, withStyles, Typography } from "@material-ui/core";
+import { Gradient } from "react-gradient";
 import PageNavbar from "./PageNavbar";
 import DashboardStateRow from "./DashboardStateRow";
 
@@ -17,6 +18,9 @@ const Dashboard = () => {
   const [statesQueryRes, setStatesQueryRes] = useState([]);
 
   const [content, setContent] = useState("");
+
+  const [minVal, setMin] = useState("");
+  const [maxVal, setMax] = useState("");
 
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
@@ -61,6 +65,27 @@ const Dashboard = () => {
             }))
           );
           setStatesQueryRes(newObj);
+
+          console.log("New obj:");
+          console.log(newObj);
+          let minAvg = 1000000000; //to-do: set to math.max
+          let maxAvg = -1000000000; //to-do: set to math.min
+
+          for (const [key, value] of Object.entries(newObj)) {
+            console.log(value.Avg);
+            if (value.Avg != null) {
+              minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+              maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+            }
+          }
+
+          setMin(Math.floor(minAvg));
+          setMax(Math.ceil(maxAvg));
+          console.log("Min------------");
+          console.log(minAvg);
+          console.log("Max-----------");
+          console.log(maxAvg);
+
           let states = stateList.map((state, i) => (
             <DashboardStateRow
               state={
@@ -115,6 +140,27 @@ const Dashboard = () => {
             }))
           );
           setStatesQueryRes(newObj);
+
+          console.log("New obj:");
+          console.log(newObj);
+          let minAvg = 1000000000; //to-do: set to math.max
+          let maxAvg = -1000000000; //to-do: set to math.min
+
+          for (const [key, value] of Object.entries(newObj)) {
+            console.log(value.Avg);
+            if (value.Avg != null) {
+              minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+              maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+            }
+          }
+
+          setMin(Math.floor(minAvg));
+          setMax(Math.ceil(maxAvg));
+          console.log("Min------------");
+          console.log(minAvg);
+          console.log("Max-----------");
+          console.log(maxAvg);
+
           let states = stateList.map((state, i) => (
             <DashboardStateRow
               state={
@@ -170,6 +216,23 @@ const Dashboard = () => {
 
           console.log("New obj:");
           console.log(newObj);
+          let minAvg = 1000000000; //to-do: set to math.max
+          let maxAvg = -1000000000; //to-do: set to math.min
+
+          for (const [key, value] of Object.entries(newObj)) {
+            console.log(value.Avg);
+            if (value.Avg != null) {
+              minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+              maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+            }
+          }
+
+          setMin(Math.floor(minAvg));
+          setMax(Math.ceil(maxAvg));
+          console.log("Min------------");
+          console.log(minAvg);
+          console.log("Max-----------");
+          console.log(maxAvg);
 
           let states = stateList.map((state, i) => (
             <DashboardStateRow
@@ -224,7 +287,30 @@ const Dashboard = () => {
               },
             }))
           );
+          console.log("New obj");
+          console.log(newObj);
           setStatesQueryRes(newObj);
+
+          console.log("New obj:");
+          console.log(newObj);
+          let minAvg = 1000000000; //to-do: set to math.max
+          let maxAvg = -1000000000; //to-do: set to math.min
+
+          for (const [key, value] of Object.entries(newObj)) {
+            console.log(value.Avg);
+            if (value.Avg != null) {
+              minAvg = value.Avg < minAvg ? value.Avg : minAvg;
+              maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
+            }
+          }
+
+          setMin(Math.floor(minAvg));
+          setMax(Math.ceil(maxAvg));
+          console.log("Min------------");
+          console.log(minAvg);
+          console.log("Max-----------");
+          console.log(maxAvg);
+
           let states = stateList.map((state, i) => (
             <DashboardStateRow
               state={
@@ -310,6 +396,110 @@ const Dashboard = () => {
           >
             House Price Index
           </Button>
+        </div>
+        <br></br>
+        <br></br>
+
+        {/* <div
+          style={{
+            marginLeft: "10px",
+            float: "left",
+          }}
+        >
+          <h5>Mean Salaries</h5>
+        </div> */}
+
+        <div>
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#ffedea",
+              marginLeft: "100px",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#ffcec5",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#ffad9f",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#ff8a75",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#ff5533",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#e2492d",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#be3d26",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#9a311f",
+            }}
+          />
+          <div
+            style={{
+              width: "30px",
+              height: "20px",
+              float: "left",
+              backgroundColor: "#782618",
+            }}
+          />
+        </div>
+        <br></br>
+        <div
+          style={{
+            marginLeft: "100px",
+            float: "left",
+          }}
+        >
+          {minVal}
+        </div>
+        <div
+          style={{
+            marginRight: "1550px",
+            float: "right",
+          }}
+        >
+          {maxVal}
         </div>
 
         <div>
