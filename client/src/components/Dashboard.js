@@ -371,6 +371,10 @@ const Dashboard = () => {
           <Button
             className="choice"
             variant="contained"
+            style={{
+              float: "left",
+              marginLeft: "100px",
+            }}
             onClick={() => getAllStatesHousePriceData()}
           >
             Home Values
