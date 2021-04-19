@@ -52,7 +52,7 @@ const rounded = (num) => {
 };
 
 //stateQueryRes = states query results (make generic)
-const MapChart = ({ statesQueryRes, setTooltipContent }) => {
+const MapChart = ({ statesQueryRes, setTooltipContent, mapStats }) => {
   //sets tooltip
 
   console.log("StatesQueryRes:");
@@ -61,27 +61,46 @@ const MapChart = ({ statesQueryRes, setTooltipContent }) => {
   let minAvg = 1000000000; //to-do: set to math.max
   let maxAvg = -1000000000; //to-do: set to math.min
 
+  // console.log("MAP STATS EQUALS:");
+  // console.log(mapStats);
+  if (
+    mapStats === "homeValues" ||
+    mapStats === "rentalValues" ||
+    mapStats === "salaries"
+  ) {
+  }
   for (const [key, value] of Object.entries(statesQueryRes)) {
-    console.log(value.Avg);
+    //console.log(value.Avg);
     if (value.Avg != null) {
       minAvg = value.Avg < minAvg ? value.Avg : minAvg;
       maxAvg = value.Avg > maxAvg ? value.Avg : maxAvg;
     }
   }
 
-  console.log("MIN AND MAX AVERAGE VALUES");
-  console.log(minAvg);
-  console.log(maxAvg);
+  //console.log("MIN AND MAX AVERAGE VALUES");
+  //console.log(minAvg);
+  //console.log(maxAvg);
 
   // let minAvg =
   // let maxAvg =
 
   const handleMouseEnter = (stateAbbreviation) => {
     let text;
-    if (statesQueryRes[stateAbbreviation]) {
-      text = `Mean: $${rounded(statesQueryRes[stateAbbreviation].Avg)} <br/>
+    if (
+      statesQueryRes[stateAbbreviation] &&
+      statesQueryRes[stateAbbreviation].Avg
+    ) {
+      if (mapStats === "housePriceIndex") {
+        text = `HPI: ${Math.round(statesQueryRes[stateAbbreviation].Avg)}`;
+      } else if (mapStats === "rentalIndex") {
+        text = `Rental Index: ${Math.round(
+          statesQueryRes[stateAbbreviation].Avg
+        )}%`;
+      } else {
+        text = `Mean: $${rounded(statesQueryRes[stateAbbreviation].Avg)} <br/>
         Min: $${rounded(statesQueryRes[stateAbbreviation].Min)}<br/>
         Max: $${rounded(statesQueryRes[stateAbbreviation].Max)}`;
+      }
     } else {
       text = "No data available";
     }

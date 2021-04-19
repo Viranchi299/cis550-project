@@ -21,6 +21,9 @@ const Dashboard = () => {
 
   const [minVal, setMin] = useState("");
   const [maxVal, setMax] = useState("");
+  const [prefix, setPrefix] = useState("");
+  const [suffix, setSuffix] = useState("");
+  const [mapStats, setMapStats] = useState("");
 
   // custom hook, we only need useEffect to run this function once similar to componentDidMount
   const useMountEffect = (func) => useEffect(func, []);
@@ -33,6 +36,9 @@ const Dashboard = () => {
   //"http://localhost:8081/home/homevaluestate"
 
   function getAllStatesHousePriceData() {
+    setPrefix("$");
+    setSuffix("");
+    setMapStats("homeValues");
     console.log("Hoice");
     console.log(choice);
     fetch("http://localhost:8081/home/homevaluestate", {
@@ -108,6 +114,9 @@ const Dashboard = () => {
   }
 
   function getAllStatesRentalData() {
+    setPrefix("$");
+    setSuffix("");
+    setMapStats("rentalValues");
     console.log("Hoice");
     console.log(choice);
     fetch("http://localhost:8081/rent/rentpricestate", {
@@ -183,6 +192,9 @@ const Dashboard = () => {
   }
 
   function getAllStatesSalaryData() {
+    setPrefix("$");
+    setSuffix("");
+    setMapStats("salaries");
     fetch("http://localhost:8081/salary/salarystate", {
       method: "GET", // The type of HTTP request.
     })
@@ -256,6 +268,9 @@ const Dashboard = () => {
   }
 
   function getAllStatesHousePriceIndexData() {
+    setPrefix("");
+    setSuffix("");
+    setMapStats("housePriceIndex");
     console.log("Hoice");
     console.log(choice);
     fetch("http://localhost:8081/homerentsalary/homesalary", {
@@ -346,6 +361,9 @@ const Dashboard = () => {
   }
 
   function getAllStatesHouseRentalIndexData() {
+    setPrefix("");
+    setSuffix("%");
+    setMapStats("rentalIndex");
     console.log("Hoice");
     console.log(choice);
     fetch("http://localhost:8081/homerentsalary/rentsalary", {
@@ -513,11 +531,22 @@ const Dashboard = () => {
         <div>
           <div
             style={{
+              float: "left",
+              marginLeft: "100px",
+            }}
+          >
+            <p>
+              Min: {prefix}
+              {minVal}
+              {suffix}
+            </p>
+          </div>
+          <div
+            style={{
               width: "30px",
               height: "20px",
               float: "left",
               backgroundColor: "#ffedea",
-              marginLeft: "100px",
             }}
           />
           <div
@@ -584,29 +613,28 @@ const Dashboard = () => {
               backgroundColor: "#782618",
             }}
           />
-        </div>
-        <br></br>
-        <div
-          style={{
-            marginLeft: "100px",
-            float: "left",
-          }}
-        >
-          {minVal}
-        </div>
-        <div
-          style={{
-            marginRight: "1550px",
-            float: "right",
-          }}
-        >
-          {maxVal}
+          <div
+            style={{
+              float: "left",
+            }}
+          >
+            <p>
+              Max: {prefix}
+              {maxVal}
+              {suffix}
+            </p>
+          </div>
         </div>
 
-        <div>
+        <div
+          style={{
+            margin: "auto",
+          }}
+        >
           <MapChart
             setTooltipContent={setContent}
             statesQueryRes={statesQueryRes}
+            mapStats={mapStats}
           />
           <ReactTooltip html={true}> {content} </ReactTooltip>
         </div>
