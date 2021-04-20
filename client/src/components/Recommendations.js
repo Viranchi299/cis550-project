@@ -1,98 +1,280 @@
-import React from 'react';
-import PageNavbar from './PageNavbar';
-import RecommendationsRow from './RecommendationsRow';
-import '../style/Recommendations.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, loadStates, useEffect } from "react";
+import "../style/Analyze.css";
+import "../style/AnalyzeView.css";
+import BestGenreRow from "./BestGenreRow";
+import RecommendationRow from "./RecommendationRow";
+import "../style/BestGenres.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Button, makeStyles, withStyles, Typography } from "@material-ui/core";
+import PageNavbar from "./PageNavbar";
 
-export default class Recommendations extends React.Component {
-	constructor(props) {
-		super(props);
+const Recommendations = (props) => {
+  const [selectedState, setSelectedState] = useState("");
+  const [statesList, setStatesList] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [cityList, setCitiesList] = useState([]);
+  const [results, setResults] = useState([]);
+  const [minSalary, setMinSalary] = useState([0]);
+  const [maxSalary, setMaxSalary] = useState([1000000000]);
 
-		// State maintained by this React component is the selected movie name,
-		// and the list of recommended movies.
-		this.state = {
-			movieName: "",
-			recMovies: []
-		}
+  console.log("rendering analyze view with choice as: " + props.dataset);
+  console.log("states list length " + statesList.length);
 
-		this.handleMovieNameChange = this.handleMovieNameChange.bind(this);
-		this.submitMovie = this.submitMovie.bind(this);
-	}
+  useEffect(() => {
+    loadStates();
+  }, [statesList.length]);
 
-	handleMovieNameChange(e) {
-		this.setState({
-			movieName: e.target.value
-		});
-	}
+  //added to not require submit button
+  //   useEffect(() => {
+  //     loadCities();
+  //   });
 
-	/* ---- Q2 (Recommendations) ---- */
-	// Hint: Name of movie submitted is contained in `this.state.movieName`.
-	submitMovie() {
-		console.log("Movie " + this.state.movieName + " was selected");
-		var movieName = this.state.movieName
-		//console.log("Tried to print this movie name: " + movieName)
-    // Send an HTTP request to the server.
-    fetch("http://localhost:8081/recommendations/"+movieName,
-    {
-      method: 'GET' // The type of HTTP request.
-    }).then(res => {
-      // Convert the response data to a JSON.
-      return res.json();
-    }, err => {
-      // Print the error if there is one.
-      console.log(err);
-    }).then(movieList => {
-      if (!movieList) return;
-      // Map each genreObj in genreList to an HTML element:
-      // A button which triggers the showMovies function for each genre.
-      console.log("This is the movieList")
-      console.log(movieList)
-      let movieDivs = movieList.map((movieObj, i) =>
-      <div><RecommendationsRow title={movieObj.title} id={movieObj.id} rating={movieObj.rating} votes={movieObj.vote_count}/> </div>
+  function loadStates() {
+    const dataset = props.dataset;
+
+    const endpoints = {
+      Home: "/home/getstateshousing",
+      Rent: "/rent/getstatesrent",
+      Salary: "/salary/salarystate",
+    };
+    fetch(`http://localhost:8081/home/getstateshousing`, {
+      method: "GET", // The type of HTTP request.
+    })
+      // fetch(`http://localhost:8081${endpoints[dataset]}`, {
+      //   method: "GET", // The type of HTTP request.
+      // })
+      .then(
+        (res) => {
+          // Convert the response data to a JSON.
+          return res.json();
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      )
+      .then(
+        (stateNames) => {
+          console.log(stateNames);
+          if (!stateNames) return;
+          let stateNameDivs = stateNames.map((state, i) => (
+            <option value={state.State}>{state.State}</option>
+          ));
+          setStatesList(stateNameDivs);
+          console.log("Set states list!");
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
       );
-      console.log(movieDivs);
+  }
 
-      //Set the state of the genres list to the value returned by the HTTP response from the server.
-      this.setState({
-        recMovies: movieDivs
-      });
-    }, err => {
-      // Print the error if there is one.
-      console.log(err);
-    });
+  function loadCities() {
+    const dataset = props.dataset;
+    const endpoints = {
+      Home: "/home/getcitieshousing/",
+      Rent: "/rent/getcitiesrent/",
+      Salary: "/salary/getcitiessalary/",
+    };
+    console.log("Calling loadCities with:" + selectedState);
+    fetch(`http://localhost:8081/home/getcitieshousing/${selectedState}`, {
+      method: "GET", // The type of HTTP request.
+    })
+      // console.log("Calling loadCities with:" + selectedState);
+      // fetch(`http://localhost:8081${endpoints[dataset]}${selectedState}`, {
+      //   method: "GET", // The type of HTTP request.
+      // })
+      .then(
+        (res) => {
+          // Convert the response data to a JSON.
+          return res.json();
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      )
+      .then(
+        (cityList) => {
+          console.log(cityList);
+          if (!cityList) return;
+          let cityDivs = cityList.map((city, i) => (
+            <option value={city.City}>{city.City}</option>
+          ));
+          //Set the state of the genres list to the value returned by the HTTP response from the server.
+          setCitiesList(cityDivs);
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      );
+  }
 
-	}
+  function loadRentals() {
+    return;
+  }
 
+  function loadSalaries() {
+    return;
+  }
 
-	render() {
+  function loadResults() {
+    fetch(
+      `http://localhost:8081/salary/getEmployerSalary/${selectedState}&${selectedCity}&0&10000000`,
+      {
+        method: "GET", // The type of HTTP request.
+      }
+    )
+      .then(
+        (res) => {
+          // Convert the response data to a JSON.
+          return res.json();
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      )
+      .then(
+        (houses) => {
+          if (!houses) return;
+          let houseRows = houses.map((house, i) => (
+            <RecommendationRow
+              Employer={house.Employer}
+              Salary={Math.round(house.AvgSalary)}
+            />
+          ));
+          console.log("Houses:");
+          console.log(houses);
+          //Set the state of the genres list to the value returned by the HTTP response from the server.
+          setResults(houseRows);
+          console.log(houseRows);
+        },
+        (err) => {
+          // Print the error if there is one.
+          console.log(err);
+        }
+      );
+  }
 
-		return (
-			<div className="Recommendations">
-				<PageNavbar active="recommendations" />
+  // // set state for selected "state name e.g., FL"
+  // const handleChangeStateName = (event) => {
+  //     setSelectedState(event.target.value);
+  // }
 
-			    <div className="container recommendations-container">
-			    	<div className="jumbotron">
-			    		<div className="h5">Recommendations</div>
-			    		<br></br>
-			    		<div className="input-container">
-			    			<input type='text' placeholder="Enter Movie Name" value={this.state.movieName} onChange={this.handleMovieNameChange} id="movieName" className="movie-input"/>
-			    			<button id="submitMovieBtn" className="submit-btn" onClick={this.submitMovie}>Submit</button>
-			    		</div>
-			    		<div className="header-container">
-			    			<div className="h6">You may like ...</div>
-			    			<div className="headers">
-			    				<div className="header"><strong>Title</strong></div>
-			    				<div className="header"><strong>Movie ID</strong></div>
-					            <div className="header"><strong>Rating</strong></div>
-					            <div className="header"><strong>Vote Count</strong></div>
-			    			</div>
-			    		</div>
-			    		<div className="results-container" id="results">
-			    			{this.state.recMovies}
-			    		</div>
-			    	</div>
-			    </div>
-		    </div>
-		);
-	}
-}
+  // // set the city for the relevant state, e.g., [Orlando] after FL was selected
+  // const handleChangeCityName = (event) => {
+  //     setSelectedCity(event.target.value);
+  //     console.log(selectedCity);
+  // }
+
+  const statesDropDown = (
+    <div className="years-container">
+      <div className="dropdown-container">
+        <select
+          value={selectedState}
+          onChange={(e) => {
+            setSelectedState(e.target.value);
+          }}
+          className="dropdown"
+          id="decadesDropdown"
+        >
+          <option select value>
+            {" "}
+            -- select a state --{" "}
+          </option>
+          {statesList}
+        </select>
+        <button
+          className="submit-btn"
+          id="decadesSubmitBtn"
+          onClick={loadCities}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+
+  const cityDropdown = (
+    <div className="citiesContainer">
+      <div className="dropdown-container">
+        <select
+          value={selectedCity}
+          onChange={(e) => {
+            setSelectedCity(e.target.value);
+          }}
+          className="dropdown"
+          id="cityDropdown"
+        >
+          <option select value>
+            {" "}
+            -- select a city --{" "}
+          </option>
+          {cityList}
+        </select>
+        {/* call loadResults using () since function will return a function to assign to onClick */}
+        <button
+          className="submit-btn"
+          id="decadesSubmitBtn"
+          onClick={loadResults()}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+
+  const EmployersContainer = (props) => {
+    return (
+      <div className="movies-container">
+        <div className="movie">
+          <div className="header">
+            <strong>Employer</strong>
+          </div>
+          <div className="header">
+            <strong></strong>
+          </div>
+          <div className="header">
+            <strong>{props.col1}</strong>
+          </div>
+          <div className="header">
+            <strong>{props.col2}</strong>
+          </div>
+          <div className="header">
+            <strong>{props.col3}</strong>
+          </div>
+        </div>
+        <div className="movies-container" id="results">
+          {results}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      <PageNavbar active="recommendations" />
+      <div className="container bestgenres-container">
+        <div className="jumbotron">
+          <Button className="category" variant="contained" color="primary">
+            {" "}
+            Employer Recommendations
+          </Button>
+          <div className="h5">States</div>
+          {statesDropDown}
+          <br />
+          <br />
+          <div className="h5">Cities</div>
+          {cityDropdown}
+        </div>
+        <div className="jumbotron">
+          <EmployersContainer col1={"Average Salary"} />
+        </div>
+      </div>
+    </div>
+  );
+};
+export default Recommendations;

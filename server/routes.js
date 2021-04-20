@@ -245,6 +245,9 @@ function getEmployersBySalaryRange(req, res) {
   var inputCity = req.params.city;
   var inputSalaryLow = req.params.salary_low;
   var inputSalaryHigh = req.params.salary_high;
+  console.log(
+    `Called getEmployerBySalaryRange with state: ${inputState} and city: ${inputCity} and salarylow: ${inputSalaryLow} and salaryHigh: ${inputSalaryHigh}`
+  );
   var query = `
     WITH temp(Employer, State, City, AvgSalary)
     AS ( 

@@ -30,7 +30,7 @@ app.get("/salary/salarystate", routes.getSalaryByState);
 app.get("/salary/getstatessalary", routes.getStatesSalary);
 app.get("/salary/getcitiessalary/:state", routes.getCitiesSalary);
 app.get(
-  "/salary/:getstatessalary&:salary_low&:salary_high",
+  "/salary/getEmployerSalary/:state&:city&:salary_low&:salary_high",
   routes.getEmployersBySalaryRange
 );
 
