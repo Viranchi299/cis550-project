@@ -212,6 +212,7 @@ const Dashboard = () => {
         (stateList) => {
           console.log("Salary List: ");
           console.log(stateList);
+          let a = "MinSalary";
           if (!stateList) return;
           // map array of objects to object of objects so we can index by state initial e.g., "AL"...
           const newObj = Object.assign(
@@ -292,6 +293,7 @@ const Dashboard = () => {
           console.log(stateList);
           if (!stateList) return;
           // map array of objects to object of objects so we can index by state initial e.g., "AL"...
+
           const newObj = Object.assign(
             {},
             ...stateList.map((item) => ({

@@ -24,6 +24,10 @@ const Recommendations = (props) => {
     loadStates();
   }, [statesList.length]);
 
+  //   useEffect(() => {
+  //     loadCities();
+  //   });
+
   //added to not require submit button
   //   useEffect(() => {
   //     loadCities();
@@ -219,7 +223,7 @@ const Recommendations = (props) => {
         <button
           className="submit-btn"
           id="decadesSubmitBtn"
-          onClick={loadResults()}
+          onClick={loadResults}
         >
           Submit
         </button>
