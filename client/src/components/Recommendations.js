@@ -7,6 +7,7 @@ import "../style/BestGenres.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, makeStyles, withStyles, Typography } from "@material-ui/core";
 import PageNavbar from "./PageNavbar";
+import "../style/Recommendations.css";
 
 const Recommendations = (props) => {
   const [selectedState, setSelectedState] = useState("");

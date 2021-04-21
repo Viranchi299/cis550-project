@@ -1,16 +1,33 @@
-.header-container, .results-container {
+.header-container,
+.results-container {
   display: flex;
   flex-flow: column wrap;
   /* margin-top: 10px; */
 }
 
-.header-container .headers, .results-container .movieResults {
+.header-container .headers,
+.results-container .movieResults {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   height: 40px;
 }
 
-.movieResults .title, .movieResults .id, .movieResults .rating, .movieResults .votes, .headers .header {
+.movieResults .title,
+.movieResults .id,
+.movieResults .rating,
+.movieResults .votes,
+.headers .header {
   flex: 1 0 25%;
+  border: 100px;
+  padding: 10px 10px 10px 10px;
+}
+
+.genre {
+  flex: 1 0 25%;
+  border-bottom: 40em;
+}
+
+#testing {
+  padding: 40px 30px 40px 10px;
 }
