@@ -294,7 +294,7 @@ const Recommendations = (props) => {
           <div>
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-secondary btn-lg"
               id="decadesSubmitBtn"
               onClick={loadResults}
             >
