@@ -228,7 +228,8 @@ const AnalyzeView = (props) => {
           {statesList}
         </select>
         <button
-          className="submit-btn"
+          type="button"
+          class="btn btn-outline-primary"
           id="decadesSubmitBtn"
           onClick={loadCities}
         >
@@ -257,7 +258,8 @@ const AnalyzeView = (props) => {
         </select>
         {/* call loadResults using () since function will return a function to assign to onClick */}
         <button
-          className="submit-btn"
+          type="button"
+          class="btn btn-outline-primary"
           id="decadesSubmitBtn"
           onClick={loadResults()}
         >

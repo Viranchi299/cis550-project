@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, makeStyles, withStyles, Typography } from "@material-ui/core";
 import PageNavbar from "./PageNavbar";
 import "../style/Recommendations.css";
+import RangeSlider from "react-bootstrap-range-slider";
 
 const Recommendations = (props) => {
   const [selectedState, setSelectedState] = useState("");
@@ -17,6 +18,7 @@ const Recommendations = (props) => {
   const [results, setResults] = useState([]);
   const [minSalary, setMinSalary] = useState([0]);
   const [maxSalary, setMaxSalary] = useState([1000000000]);
+  const [minValue, setMinValue] = useState(0);
 
   console.log("rendering analyze view with choice as: " + props.dataset);
   console.log("states list length " + statesList.length);
@@ -127,7 +129,7 @@ const Recommendations = (props) => {
 
   function loadResults() {
     fetch(
-      `http://localhost:8081/salary/getEmployerSalary/${selectedState}&${selectedCity}&0&10000000`,
+      `http://localhost:8081/salary/getEmployerSalary/${selectedState}&${selectedCity}&${minValue}&10000000`,
       {
         method: "GET", // The type of HTTP request.
       }
@@ -193,11 +195,12 @@ const Recommendations = (props) => {
           {statesList}
         </select>
         <button
-          className="submit-btn"
+          type="button"
+          class="btn btn-outline-primary"
           id="decadesSubmitBtn"
           onClick={loadCities}
         >
-          Submit
+          Select
         </button>
       </div>
     </div>
@@ -221,13 +224,13 @@ const Recommendations = (props) => {
           {cityList}
         </select>
         {/* call loadResults using () since function will return a function to assign to onClick */}
-        <button
+        {/* <button
           className="submit-btn"
           id="decadesSubmitBtn"
           onClick={loadResults}
         >
           Submit
-        </button>
+        </button> */}
       </div>
     </div>
   );
@@ -271,9 +274,33 @@ const Recommendations = (props) => {
           <div className="h5">States</div>
           {statesDropDown}
           <br />
-          <br />
           <div className="h5">Cities</div>
           {cityDropdown}
+          <br />
+
+          <div>
+            <h5>Min salary:</h5>
+          </div>
+          <div sm="8">
+            <RangeSlider
+              value={minValue}
+              max={500000}
+              step={1000}
+              size="sm"
+              //   onChange={(changeEvent) => setMinValue(changeEvent.target.value)}
+              onChange={(changeEvent) => setMinValue(changeEvent.target.value)}
+            />
+          </div>
+          <div>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              id="decadesSubmitBtn"
+              onClick={loadResults}
+            >
+              Get Recommendations
+            </button>
+          </div>
         </div>
         <div className="jumbotron">
           <EmployersContainer col1={"Average Salary"} />
