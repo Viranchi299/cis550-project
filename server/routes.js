@@ -267,7 +267,7 @@ function getEmployersBySalaryRange(req, res) {
     AND City = '${inputCity}'
     AND AvgSalary >= '${inputSalaryLow}'
     GROUP BY Employer
-    ORDER BY AvgSalary DESC, State ASC
+    ORDER BY AvgSalary ASC, State ASC
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
