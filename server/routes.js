@@ -244,9 +244,8 @@ function getEmployersBySalaryRange(req, res) {
   var inputState = req.params.state;
   var inputCity = req.params.city;
   var inputSalaryLow = req.params.salary_low;
-  var inputSalaryHigh = req.params.salary_high;
   console.log(
-    `Called getEmployerBySalaryRange with state: ${inputState} and city: ${inputCity} and salarylow: ${inputSalaryLow} and salaryHigh: ${inputSalaryHigh}`
+    `Called getEmployerBySalaryRange with state: ${inputState} and city: ${inputCity} and salarylow: ${inputSalaryLow}`
   );
   var query = `
     WITH temp(Employer, State, City, AvgSalary)
@@ -266,7 +265,7 @@ function getEmployersBySalaryRange(req, res) {
     SELECT * FROM temp
     WHERE State = '${inputState}'
     AND City = '${inputCity}'
-    AND AvgSalary BETWEEN '${inputSalaryLow}' AND '${inputSalaryHigh}'
+    AND AvgSalary >= '${inputSalaryLow}'
     GROUP BY Employer
     ORDER BY AvgSalary DESC, State ASC
   `;
