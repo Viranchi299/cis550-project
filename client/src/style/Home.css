@@ -1,3 +1,25 @@
 .carousel-slide {
   width: 150px;
 }
+
+.lander {
+  font-size: 5rem;
+  font-family: "IBM Plex Sans", sans-serif;
+  font: bold;
+  border: 100px;
+  border-radius: 0.25em;
+  padding: 10px 10px 10px 10px;
+  margin-top: 200px;
+  margin-left: 150px;
+  margin-right: 900px;
+  background-color: rgba(255, 255, 255, 0.75);
+  /* opacity: 80%; */
+}
+
+#title {
+  font-size: 6rem;
+  font-weight: bold;
+  font-family: "IBM Plex Sans", sans-serif;
+  font: bold;
+  /* opacity: 80%; */
+}

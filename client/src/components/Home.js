@@ -41,6 +41,10 @@ export default class Posters extends React.Component {
               height: "950px",
             }}
           >
+            <div class="lander">
+              <h1 id="title">Relocation Buddy</h1>
+              <h2>Helping you find your new home</h2>
+            </div>
             <div
               style={{
                 height: "100px",
