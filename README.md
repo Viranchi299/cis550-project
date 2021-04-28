@@ -34,7 +34,7 @@ In a separate terminal window, cd into the client folder and type **npm start**.
 If your setup was successful, you should see the landing page below open up on your browser at http://localhost:3000.
 
 <p align="center">
-  <img width="1050" height="587" src="https://github.com/criemensnider/Hackathon-Project/blob/master/images/Desktop_Game.PNG">
+  <img width="1050" height="587" src="https://github.com/Viranchi299/cis550-project/blob/main/cis550-dashboard.jpg">
 </p>
 
 
