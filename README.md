@@ -13,7 +13,7 @@ provides recommendations on relocation to the US based on the user’s preferenc
 * **Josh Chopra** Penn email: jchopra@seas.upenn.edu – [GitHub](https://github.com/joshua-chopra)
 * **Samantha Lau** Penn email: samlauj@seas.upenn.edu – [GitHub](https://github.com/samlaujw)
 * **Claire Lua** Penn email: clua@seas.upenn.edu – [GitHub](https://github.com/clairelua)
-* **Viranchibhai Patel** - Devpost ID: viranchi  – Penn email: viranchi@seas.upenn.edu  – [GitHub](https://github.com/Viranchi299)
+* **Viranchibhai Patel** - Penn email: viranchi@seas.upenn.edu  – [GitHub](https://github.com/Viranchi299)
 
 ## Usage
 
