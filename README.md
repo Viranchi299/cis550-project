@@ -42,4 +42,8 @@ If your setup was successful, you should see the landing page below open up on y
 
 * [React](https://reactjs.org/) - A JavaScript library for building user interfaces
 * [React-simple-maps](https://www.react-simple-maps.io/) - A declarative API for generating map-based visuals
+* Colab - Data processing and cleaning using pandas
+* mySQL database
+* Sequel Ace - SQL frontend for writing SQL
+
 
