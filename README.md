@@ -40,6 +40,6 @@ If your setup was successful, you should see the landing page below open up on y
 
 ### Tools used
 
-* [React](https://reactjs.org/) - Description: A JavaScript library for building user interfaces
-* [React-simple-maps](https://www.react-simple-maps.io/) - Description: A declarative API for generating map-based visuals
+* [React](https://reactjs.org/) - A JavaScript library for building user interfaces
+* [React-simple-maps](https://www.react-simple-maps.io/) - A declarative API for generating map-based visuals
 
