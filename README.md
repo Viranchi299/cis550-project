@@ -31,7 +31,7 @@ While in the server folder, type **npm start** in the terminal to start the serv
 
 In a separate terminal window, cd into the client folder and type **npm start**. This will start the client-side code. 
 
-If your setup was successful, you should see the landing page below open up on your browser at http://localhost:3000.
+If your setup was successful, you should see the landing page below open up on your browser at http://localhost:3000. An example display of the dashboard page is shown below.
 
 <p align="center">
   <img width="1050" height="587" src="https://github.com/Viranchi299/cis550-project/blob/main/cis550-dashboard.jpg">
