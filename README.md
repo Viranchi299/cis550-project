@@ -31,17 +31,15 @@ While in the server folder, type **npm start** in the terminal to start the serv
 
 In a separate terminal window, cd into the client folder and type **npm start**. This will start the client-side code. 
 
-If your setup was successful, you should see the landing page as shown below: 
+If your setup was successful, you should see the landing page below open up on your browser at http://localhost:3000.
 
+<p align="center">
+  <img width="1050" height="587" src="https://github.com/criemensnider/Hackathon-Project/blob/master/images/Desktop_Game.PNG">
+</p>
 
-
-which would open http://localhost:3000 for you to view the visualizer in the browser.
 
 ### Tools used
 
 * [React](https://reactjs.org/) - Description: A JavaScript library for building user interfaces
+* [React-simple-maps](https://www.react-simple-maps.io/) - Description: A declarative API for generating map-based visuals
 
-
-### Acknowledgments
-
-We used some starter code from our fellow Penn alum Clément Mihailescu https://github.com/clementmihailescu that included the implementation of MergeSort, which we have since modified to make it visually consistent with the other sorting algorithms we wrote independently. 
