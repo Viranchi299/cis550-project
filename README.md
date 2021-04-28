@@ -5,15 +5,15 @@ Final Project for Dabase and Information Systems (CIS550)
 
 ### Project summary
 
-We created a visualizer to show how the most commonly used sorting algorithms work, including MergeSort, QuickSort, BubbleSort, and HeapSort. Our visualizer also compares the run time of these sorting algorithms on a randomly generated integer array.  
-
-Include the link to your Devpost project page here: [Devpost](https://devpost.com/software/sorting-algorithm-visualizer)
+The US relocation buddy is a multi-page web app that allow users to analyze housing, salary, and employer data at a per state and per city level. The app
+provides recommendations on relocation to the US based on the user’s preferences on house prices, salary range, and employers.
 
 ### Authors
 
-* **xxx** - Devpost ID: LarryPenn – Penn email: xxx@seas.upenn.edu – [GitHub](https://github.com/LarryPenn)
+* **Josh Chopra** Penn email: jchopra@seas.upenn.edu – [GitHub](https://github.com/joshua-chopra)
+* **Samantha Lau** Penn email: samlauj@seas.upenn.edu – [GitHub](https://github.com/samlaujw)
+* **Claire Lua** Penn email: clua@seas.upenn.edu – [GitHub](https://github.com/clairelua)
 * **Viranchibhai Patel** - Devpost ID: viranchi  – Penn email: viranchi@seas.upenn.edu  – [GitHub](https://github.com/Viranchi299)
-* **xxx** - Devpost ID: chenmcao – Penn email: chenmcao@seas.upenn.edu – [GitHub](https://github.com/chenming-cao)
 
 ## Usage
 
@@ -21,9 +21,13 @@ Clone the Github repo to an IDE on your local machine (we used VS Code). Make su
 
 npm install --save react
 
-Then, in the project directory, you can run:
+Then, in the project directory:
 
-npm start
+cd into the /client directory and type:
+
+**npm install**
+
+This will download all the required client-side dependencies, which are specified in package.json into the node_modules/ directory
 
 which would open http://localhost:3000 for you to view the visualizer in the browser.
 
