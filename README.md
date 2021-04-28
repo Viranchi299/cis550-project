@@ -1,4 +1,4 @@
-# Relocation Buddy App 
+# US Relocation Buddy
 Final Project for Dabase and Information Systems (CIS550)
 
 ## Overview
