@@ -2,6 +2,7 @@ import React, { useState, loadStates, useEffect } from "react";
 import "../style/Analyze.css";
 import "../style/AnalyzeView.css";
 import BestGenreRow from "./BestGenreRow";
+import SalaryRow from "./SalaryRow";
 import "../style/BestGenres.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, makeStyles, withStyles, Typography } from "@material-ui/core";
@@ -110,7 +111,51 @@ const AnalyzeView = (props) => {
   }
 
   function loadSalaries() {
-    return;
+    {
+      fetch(`http://localhost:8081/salary/salarystate`, {
+        method: "GET", // The type of HTTP request.
+      })
+        // fetch(
+        //   `http://localhost:8081/salary/getEmployerSalary/CA&Sunnyvale&0&10000000`,
+        //   {
+        //     method: "GET", // The type of HTTP request.
+        //   }
+        // )
+        .then(
+          (res) => {
+            // Convert the response data to a JSON.
+            console.log("RESPONSE");
+            console.log(res);
+            return res.json();
+          },
+          (err) => {
+            // Print the error if there is one.
+            console.log(err);
+          }
+        )
+        .then(
+          (houses) => {
+            if (!houses) return;
+            let houseRows = houses.map((house, i) => (
+              <SalaryRow
+                State={house.State}
+                MinSalary={house.MinSalary}
+                MaxSalary={house.MaxSalary}
+                AvgSalary={house.AvgSalary}
+              />
+            ));
+            console.log("Houses");
+            console.log(houses);
+            //Set the state of the genres list to the value returned by the HTTP response from the server.
+            setResults(houseRows);
+            console.log(houseRows);
+          },
+          (err) => {
+            // Print the error if there is one.
+            console.log(err);
+          }
+        );
+    }
   }
 
   function loadHomes() {
@@ -300,20 +345,20 @@ const AnalyzeView = (props) => {
     return (
       <div className="movies-container">
         <div className="movie">
-          <div className="header">
+          {/* <div className="header">
             <strong>City</strong>
-          </div>
+          </div> */}
           <div className="header">
             <strong>State</strong>
           </div>
           <div className="header">
-            <strong>Min House Price</strong>
+            <strong>Min Salary</strong>
           </div>
           <div className="header">
-            <strong>Max House Price</strong>
+            <strong>Max Salary</strong>
           </div>
           <div className="header">
-            <strong>Average House Price</strong>
+            <strong>Average Salary</strong>
           </div>
         </div>
         <div className="movies-container" id="results">
@@ -335,12 +380,36 @@ const AnalyzeView = (props) => {
           {" "}
           Change Category{" "}
         </Button>
-        <div className="h5">States</div>
-        {statesDropDown}
-        <br />
-        <br />
-        <div className="h5">Cities</div>
-        {cityDropdown}
+        {/* <div>
+          <div className="h5">States</div>
+          {statesDropDown}
+          <br />
+          <br />
+          <div className="h5">Cities</div>
+          {cityDropdown}
+        </div> */}
+
+        {props.dataset === "Home" || props.dataset === "Rent" ? (
+          <div>
+            <div className="h5">States</div>
+            {statesDropDown}
+            <br />
+            <br />
+            <div className="h5">Cities</div>
+            {cityDropdown}
+          </div>
+        ) : (
+          <div>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              id="decadesSubmitBtn"
+              onClick={loadResults()}
+            >
+              Load State Salaries
+            </button>
+          </div>
+        )}
       </div>
       <div className="jumbotron">
         {props.dataset === "Home" ? (
