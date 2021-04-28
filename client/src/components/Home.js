@@ -43,7 +43,7 @@ export default class Posters extends React.Component {
           >
             <div class="lander">
               <h1 id="title">Relocation Buddy</h1>
-              <h2>Helping you find your new home</h2>
+              <h3>Helping you go wherever life takes you.</h3>
             </div>
             <div
               style={{
