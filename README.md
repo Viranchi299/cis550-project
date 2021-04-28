@@ -23,11 +23,17 @@ npm install --save react
 
 Then, in the project directory:
 
-cd into the /client directory and type:
+cd into the /client directory and type **npm install**. This will download all the required client-side dependencies, which are specified in package.json into the node_modules/ directory.
 
-**npm install**
+cd out of the /client directory and into the /server directory and type **npm install**. This will download all required server-side dependencies.
 
-This will download all the required client-side dependencies, which are specified in package.json into the node_modules/ directory
+While in the server folder, type **npm start** in the terminal to start the server. 
+
+In a separate terminal window, cd into the client folder and type **npm start**. This will start the client-side code. 
+
+If your setup was successful, you should see the landing page as shown below: 
+
+
 
 which would open http://localhost:3000 for you to view the visualizer in the browser.
 
